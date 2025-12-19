@@ -65,7 +65,7 @@ export default function Step17Username({ onNext }: Step17UsernameProps) {
         </div>
       </div>
       
-      <div className="sticky bottom-0 pb-6 pt-4 bg-white border-t border-gray-100">
+      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
         <Button
           variant="primary"
           size="lg"

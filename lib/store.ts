@@ -4,7 +4,7 @@ export interface OnboardingState {
   // Auth
   auth: {
     email: string
-    provider: 'email' | 'apple' | 'google' | null
+    provider: 'email' | 'google' | null
     isVerified: boolean
   }
   
@@ -21,6 +21,10 @@ export interface OnboardingState {
     height: {
       value: number | null
       unit: 'cm' | 'in'
+    }
+    currentWeight: {
+      value: number | null
+      unit: 'kg' | 'lb'
     }
     bmi: {
       value: number | null
@@ -88,6 +92,10 @@ const initialState = {
       value: null,
       unit: 'cm' as const,
     },
+    currentWeight: {
+      value: null,
+      unit: 'kg' as const,
+    },
     bmi: {
       value: null,
       category: null,
@@ -128,6 +136,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       ...state.metrics, 
       ...metrics,
       height: metrics.height ? { ...state.metrics.height, ...metrics.height } : state.metrics.height,
+      currentWeight: metrics.currentWeight ? { ...state.metrics.currentWeight, ...metrics.currentWeight } : state.metrics.currentWeight,
       bmi: metrics.bmi ? { ...state.metrics.bmi, ...metrics.bmi } : state.metrics.bmi,
       goalWeight: metrics.goalWeight ? { ...state.metrics.goalWeight, ...metrics.goalWeight } : state.metrics.goalWeight,
     } 

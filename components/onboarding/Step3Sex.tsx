@@ -56,15 +56,18 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
         </div>
       </div>
       
-      <div className="sticky bottom-0 pb-6 pt-4 bg-white border-t border-gray-100">
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={onNext}
-        >
-          Next
-        </Button>
+      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
+        <div className="flex justify-center px-4">
+          <div className="w-full max-w-md">
+            <Button
+              variant="primary"
+              className="w-full py-2.5 text-base min-w-[300px]" 
+              onClick={onNext}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )

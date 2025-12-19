@@ -3,7 +3,7 @@
 # Default target
 help:
 	@echo "Available commands:"
-	@echo "  make up          - Build and start containers"
+	@echo "  make up          - Build and start containers with hot reload"
 	@echo "  make down        - Stop and remove containers"
 	@echo "  make clean       - Stop containers, remove volumes and images"
 	@echo "  make logs        - View container logs"
@@ -16,6 +16,9 @@ help:
 # Commands
 up:
 	docker compose up --build -d
+
+up-fast:
+	docker compose up -d
 
 down:
 	docker compose down

@@ -4,39 +4,39 @@ import { useState, useEffect } from 'react'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
 
-interface Step8HeightProps {
+interface Step11GoalWeightProps {
   onNext: () => void
   onBack: () => void
 }
 
-export default function Step8Height({ onNext }: Step8HeightProps) {
+export default function Step11GoalWeight({ onNext }: Step11GoalWeightProps) {
   const { metrics, setMetrics } = useOnboardingStore()
-  const [value, setValue] = useState<string>(String(metrics.height.value || 173))
-  const [unit, setUnit] = useState<'cm' | 'inch'>(metrics.height.unit === 'in' ? 'inch' : (metrics.height.unit === 'cm' ? 'cm' : 'cm'))
+  const [value, setValue] = useState<string>(String(metrics.goalWeight.value || 65))
+  const [unit, setUnit] = useState<'kg' | 'lbs'>(metrics.goalWeight.unit === 'lb' ? 'lbs' : (metrics.goalWeight.unit === 'kg' ? 'kg' : 'kg'))
   
   useEffect(() => {
     const numValue = parseFloat(value) || 0
     if (numValue > 0) {
       setMetrics({
-        height: { 
+        goalWeight: { 
           value: numValue, 
-          unit: unit === 'inch' ? 'in' : 'cm' 
+          unit: unit === 'lbs' ? 'lb' : 'kg' 
         },
       })
     }
   }, [value, unit, setMetrics])
   
-  const handleUnitChange = (newUnit: 'cm' | 'inch') => {
+  const handleUnitChange = (newUnit: 'kg' | 'lbs') => {
     if (newUnit === unit) return
     
     const numValue = parseFloat(value) || 0
     if (numValue > 0) {
-      if (unit === 'cm' && newUnit === 'inch') {
-        // Convert cm to inches
-        setValue(String(Math.round((numValue / 2.54) * 10) / 10))
-      } else if (unit === 'inch' && newUnit === 'cm') {
-        // Convert inches to cm
-        setValue(String(Math.round(numValue * 2.54)))
+      if (unit === 'kg' && newUnit === 'lbs') {
+        // Convert kg to lbs
+        setValue(String(Math.round(numValue * 2.20462)))
+      } else if (unit === 'lbs' && newUnit === 'kg') {
+        // Convert lbs to kg
+        setValue(String(Math.round(numValue * 0.453592)))
       }
     }
     setUnit(newUnit)
@@ -53,7 +53,7 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
   const handleBlur = () => {
     const numValue = parseFloat(value)
     if (isNaN(numValue) || numValue <= 0) {
-      setValue(unit === 'cm' ? '173' : '68')
+      setValue(unit === 'kg' ? '65' : '143')
     } else {
       setValue(String(numValue))
     }
@@ -63,7 +63,7 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
     <div className="flex flex-col h-full px-6 py-8">
       <div className="flex-1 flex flex-col justify-center">
         <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
-          What&apos;s your height?
+          What&apos;s your goal weight?
         </h2>
         
         <div className="flex flex-col items-center mb-8">
@@ -72,28 +72,28 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
             {/* Unit selector */}
             <div className="flex justify-center gap-2 mb-6">
               <button
-                onClick={() => handleUnitChange('cm')}
+                onClick={() => handleUnitChange('kg')}
                 className={`
                   px-4 py-1.5 rounded-lg text-sm font-medium transition-all
-                  ${unit === 'cm'
+                  ${unit === 'kg'
                     ? 'bg-primary-light text-primary'
                     : 'bg-white text-gray-600'
                   }
                 `}
               >
-                cm
+                kg
               </button>
               <button
-                onClick={() => handleUnitChange('inch')}
+                onClick={() => handleUnitChange('lbs')}
                 className={`
                   px-4 py-1.5 rounded-lg text-sm font-medium transition-all
-                  ${unit === 'inch'
+                  ${unit === 'lbs'
                     ? 'bg-primary-light text-primary'
                     : 'bg-white text-gray-600'
                   }
                 `}
               >
-                inch
+                lbs
               </button>
             </div>
             
@@ -106,7 +106,7 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
                 onChange={handleValueChange}
                 onBlur={handleBlur}
                 className="text-6xl font-bold text-gray-800 text-center w-32 border-b-2 border-gray-300 focus:border-primary focus:outline-none pb-2"
-                placeholder={unit === 'cm' ? '173' : '68'}
+                placeholder={unit === 'kg' ? '65' : '143'}
               />
               <span className="text-3xl font-semibold text-gray-800">{unit}</span>
             </div>
@@ -126,7 +126,7 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
                 Creating your personal plan
               </p>
               <p className="text-sm text-gray-700">
-                People tend to have a higher body-fat percentage as they age, even at identical BMIs.
+                Easy win: We&apos;ll help you reach your goal weight step by step with a personalized plan.
               </p>
             </div>
           </div>
@@ -149,3 +149,4 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
     </div>
   )
 }
+
