@@ -23,6 +23,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'sans-serif'],
+        'plus-jakarta': ['var(--font-plus-jakarta-sans)', 'system-ui', 'sans-serif'],
       },
       animation: {
         'slide-in-right': 'slideInRight 0.3s ease-out',

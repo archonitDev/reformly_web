@@ -85,24 +85,39 @@ export default function OnboardingWizard({
   }
   
   return (
-    <div className="min-h-screen flex flex-col bg-white w-full">
+    <div className="min-h-screen flex flex-col bg-white w-full relative">
+      {/* Full-width gradient background for BMI step - starts from progress bar */}
+      {currentStep === 10 && (
+        <div 
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            top: '-9px',
+            bottom: 0,
+            background: 'linear-gradient(to bottom, transparent 0px, transparent 90px, #EAE2FF 90px, #EAE2FF 150px, rgba(234, 226, 255, 0.5) 250px, rgba(234, 226, 255, 0) 400px, transparent 100%)',
+            width: '100%',
+            zIndex: 0,
+          }}
+        />
+      )}
+      
       {/* Header - full width */}
       {currentStep > 0 && (
-        <div className="w-full px-6 pt-6 pb-4">
+        <div className="w-full px-6 pt-6 pb-4 relative z-10">
           <div className="flex items-center gap-3 mb-4">
             {showBackButton && <BackButton onClick={onBack} />}
-            <h1 className="text-xl font-bold text-black pl-2">reformly</h1>
+            <h1 className="font-plus-jakarta text-[28px] font-bold leading-[33.6px] text-black pl-2">reformly</h1>
           </div>
-          <div className="border-t border-gray-200 w-full mb-4"></div>
-          {showProgress && (
-            <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
-              <ProgressBar 
-                current={currentStep - 2} 
-                total={15} 
-                startPercentage={20}
-              />
-            </div>
-          )}
+          <div className="relative border-t border-gray-200 w-full mb-4" style={{ height: '1px' }}>
+            {showProgress && (
+              <div className="absolute top-[-1px] left-0 right-0" style={{ paddingLeft: '6%', paddingRight: '6%' }}>
+                <ProgressBar 
+                  current={currentStep - 2} 
+                  total={15} 
+                  startPercentage={20}
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
       
@@ -120,13 +135,14 @@ export default function OnboardingWizard({
               x: { type: 'spring', stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 },
             }}
-            className={`absolute inset-0 ${currentStep === 0 ? '' : 'flex items-center justify-center'}`}
+            className={`absolute inset-0 ${currentStep === 0 ? '' : 'flex justify-center'}`}
+            style={{ zIndex: 1, position: 'relative' }}
           >
             {currentStep === 0 ? (
               <StepComponent onNext={onNext} onBack={onBack} />
             ) : (
-              <div className="w-full flex justify-center items-center">
-                <div className="w-full" style={{ width: '28vw', minWidth: '500px', maxWidth: '660px', margin: '0 auto' }}>
+              <div className="w-full flex justify-center">
+                <div className="w-full" style={{ width: '30vw', minWidth: '550px', maxWidth: '690px', margin: '0 auto' }}>
                   <StepComponent onNext={onNext} onBack={onBack} />
                 </div>
               </div>

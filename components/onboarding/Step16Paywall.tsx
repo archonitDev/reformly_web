@@ -82,8 +82,8 @@ export default function Step16Paywall({ onNext }: Step16PaywallProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8 overflow-y-auto">
-      <div className="flex-1">
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
+      <div style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
           How does trial work?
         </h2>
         
@@ -153,18 +153,18 @@ export default function Step16Paywall({ onNext }: Step16PaywallProps) {
             )
           })}
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={handleSubscribe}
-          isLoading={isLoading}
-        >
-          Subscribe now
-        </Button>
+        
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={handleSubscribe}
+            isLoading={isLoading}
+          >
+            Subscribe now
+          </Button>
+        </div>
       </div>
     </div>
   )

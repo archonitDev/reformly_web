@@ -19,13 +19,13 @@ export default function Step0Welcome({ onNext }: Step0WelcomeProps) {
     <div className="flex flex-col h-full w-full bg-white">
       {/* Header with logo - full width */}
       <div className="w-full px-6 pt-6 pb-4">
-        <h1 className="text-xl font-bold text-black pl-2">reformly</h1>
+        <h1 className="font-plus-jakarta text-[28px] font-bold leading-[33.6px] text-black ml-10">reformly</h1>
         <div className="mt-4 border-t border-gray-200 w-full"></div>
       </div>
       
       {/* Main content - centered but full width container */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full px-6 py-8 -mt-[15%]">
-        <h2 className="text-4xl font-semibold mb-12 text-center text-black">
+      <div className="flex-1 flex flex-col items-center justify-start w-full px-6 py-8" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-12 text-center text-gray-800">
           Log in to your Account or<br />
           Create a new Account
         </h2>

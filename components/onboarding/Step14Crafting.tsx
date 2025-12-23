@@ -60,8 +60,8 @@ export default function Step14Crafting({ onNext }: Step14CraftingProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold mb-12 text-center text-gray-800">
+      <div className="flex flex-col justify-start items-center" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-12 text-center text-gray-800">
           Crafting Your Plan
         </h2>
         
@@ -128,23 +128,23 @@ export default function Step14Crafting({ onNext }: Step14CraftingProps) {
             </motion.div>
           ))}
         </div>
-      </div>
-      
-      {isComplete && (
-        <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-          <div className="flex justify-center px-4">
-            <div className="w-full max-w-md">
-              <Button
-                variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
-                onClick={onNext}
-              >
-                Continue
-              </Button>
+        
+        {isComplete && (
+          <div className="mt-4">
+            <div className="flex justify-center px-4">
+              <div className="w-full max-w-md">
+                <Button
+                  variant="primary"
+                  className="w-full py-2.5 text-base min-w-[300px]" 
+                  onClick={onNext}
+                >
+                  Next
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

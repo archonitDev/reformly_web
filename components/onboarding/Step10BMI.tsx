@@ -101,9 +101,9 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8 bg-white">
-      <div className="flex-1 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
+    <div className="flex flex-col h-full px-6 py-8 bg-transparent">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '0px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
           Your current BMI
         </h2>
         
@@ -119,7 +119,7 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
           </motion.div>
           
           {/* BMI Scale */}
-          <div className="w-full max-w-md mb-6">
+          <div className="w-full max-w-md mb-6" style={{ width: '110%', maxWidth: 'calc(550px * 1.1)' }}>
             {/* Number markers - ABOVE the bar */}
             <div className="relative mb-2 h-4">
               {markers.map((marker) => {
@@ -154,8 +154,8 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
                 className="absolute"
                 style={{
                   left: `${bmiPosition}%`,
-                  transform: 'translateX(-50%)',
-                  bottom: '-2px',
+                  transform: 'translateX(-50%) rotate(180deg)',
+                  top: '-2px',
                   zIndex: 10,
                 }}
               >
@@ -177,16 +177,24 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
             </div>
             
             {/* Category labels - BELOW the bar */}
-            <div className="flex justify-between text-xs text-gray-600 mt-8">
-              <span>Underweight</span>
-              <span>Normal</span>
-              <span>Overweight</span>
-              <span>Obese</span>
+            <div className="flex justify-between text-xs mt-8 relative">
+              <span className={currentCategory?.label === 'Underweight' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+                Underweight
+              </span>
+              <span className={currentCategory?.label === 'Normal' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+                Normal
+              </span>
+              <span className={currentCategory?.label === 'Overweight' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+                Overweight
+              </span>
+              <span className={currentCategory?.label === 'Obese' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+                Obese
+              </span>
             </div>
           </div>
           
           {/* Information message box */}
-          <div className="bg-primary-light rounded-2xl p-5 max-w-md">
+          <div className="bg-primary-light rounded-2xl p-4 max-w-md mb-4" style={{ width: '110%', maxWidth: 'calc(550px * 1.1)' }}>
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-bold">i</span>
@@ -197,18 +205,18 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
-            <Button
-              variant="primary"
-              className="w-full py-2.5 text-base min-w-[300px]" 
-              onClick={onNext}
-            >
-              Next
-            </Button>
+        
+        <div className="mt-2">
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-md">
+              <Button
+                variant="primary"
+                className="w-full py-2.5 text-base min-w-[300px]" 
+                onClick={onNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>

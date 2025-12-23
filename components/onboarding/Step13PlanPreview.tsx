@@ -117,8 +117,8 @@ export default function Step13PlanPreview({ onNext }: Step13PlanPreviewProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold mb-2 text-center text-gray-800">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-2 text-center text-gray-800">
           Your step-by-step wellness journey
         </h2>
         <p className="text-sm text-gray-600 text-center mb-8">
@@ -180,16 +180,15 @@ export default function Step13PlanPreview({ onNext }: Step13PlanPreviewProps) {
         </div>
         
         {/* Disclaimer text */}
-        <div className="mb-6">
+        <div className="mb-4">
           <p className="text-xs text-gray-600 text-center leading-relaxed px-4">
             *This estimate is based on tracked user progress. Check with your physician before starting. Following exercises, your plan, and meal plan impacts results.
           </p>
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
+        
+        <div className="mt-4">
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-md">
             <Button
               variant="primary"
               className="w-full py-2.5 text-base min-w-[300px]" 
@@ -197,6 +196,7 @@ export default function Step13PlanPreview({ onNext }: Step13PlanPreviewProps) {
             >
               Next
             </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function Step18Finish({ onNext }: Step18FinishProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center items-center text-center">
+      <div className="flex flex-col justify-center items-center text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -53,7 +53,7 @@ export default function Step18Finish({ onNext }: Step18FinishProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl font-bold mb-4 text-gray-800"
+          className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800"
         >
           You&apos;re all set!
         </motion.h2>
@@ -66,17 +66,17 @@ export default function Step18Finish({ onNext }: Step18FinishProps) {
         >
           Welcome to Reformly, {profile.username || 'there'}! Your personalized wellness journey starts now.
         </motion.p>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={handleGoToDashboard}
-        >
-          Go to dashboard
-        </Button>
+        
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={handleGoToDashboard}
+          >
+            Go to dashboard
+          </Button>
+        </div>
       </div>
     </div>
   )

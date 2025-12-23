@@ -61,8 +61,8 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
           What&apos;s your weight?
         </h2>
         
@@ -114,7 +114,7 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
         </div>
         
         {/* Information message */}
-        <div className="bg-primary-light rounded-2xl p-4 max-w-md mx-auto">
+        <div className="bg-primary-light rounded-2xl p-4 max-w-md mx-auto mb-4">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
               <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
@@ -131,18 +131,18 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
-            <Button
-              variant="primary"
-              className="w-full py-2.5 text-base min-w-[300px]" 
-              onClick={onNext}
-            >
-              Next
-            </Button>
+        
+        <div className="mt-4">
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-md">
+              <Button
+                variant="primary"
+                className="w-full py-2.5 text-base min-w-[300px]" 
+                onClick={onNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>

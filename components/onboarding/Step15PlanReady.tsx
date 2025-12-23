@@ -15,11 +15,11 @@ export default function Step15PlanReady({ onNext }: Step15PlanReadyProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-2xl font-semibold mb-8 text-center text-gray-800"
+          className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800"
         >
           {profile.username || 'Mex'}, your personalized plan is ready!
         </motion.h2>
@@ -56,23 +56,23 @@ export default function Step15PlanReady({ onNext }: Step15PlanReadyProps) {
         </div>
         
         {/* Character placeholder */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-4">
           <div className="w-32 h-32 bg-primary-light rounded-full flex items-center justify-center">
             <span className="text-6xl">👤</span>
           </div>
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
-            <Button
-              variant="primary"
-              className="w-full py-2.5 text-base min-w-[300px]" 
-              onClick={onNext}
-            >
-              Next
-            </Button>
+        
+        <div className="mt-4">
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-md">
+              <Button
+                variant="primary"
+                className="w-full py-2.5 text-base min-w-[300px]" 
+                onClick={onNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -79,8 +79,8 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
           Verification code
         </h2>
         
@@ -102,7 +102,7 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
           ))}
         </div>
         
-        <div className="text-center text-sm text-gray-600">
+        <div className="text-center text-sm text-gray-600 mb-4">
           {resendTimer > 0 ? (
             <span>Resend Code in {formatTimer(resendTimer)}</span>
           ) : (
@@ -117,19 +117,19 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
             </button>
           )}
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={handleContinue}
-          isLoading={isLoading}
-          disabled={codes.join('').length !== 6}
-        >
-          Continue
-        </Button>
+        
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={handleContinue}
+            isLoading={isLoading}
+            disabled={codes.join('').length !== 6}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   )

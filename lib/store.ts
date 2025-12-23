@@ -130,7 +130,10 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   ...initialState,
   
   setAuth: (auth) => set((state) => ({ auth: { ...state.auth, ...auth } })),
-  setAboutYou: (aboutYou) => set((state) => ({ aboutYou: { ...state.aboutYou, ...aboutYou } })),
+  setAboutYou: (patch) =>
+    set((state) => ({
+      aboutYou: { ...state.aboutYou, ...patch },
+    })),
   setMetrics: (metrics) => set((state) => ({ 
     metrics: { 
       ...state.metrics, 

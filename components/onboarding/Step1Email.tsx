@@ -32,12 +32,12 @@ export default function Step1Email({ onNext }: Step1EmailProps) {
   
   return (
     <div className="flex flex-col h-full px-6 py-8">
-      <div className="flex-1 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">
+      <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
           Log in to your Account or Create a new Account
         </h2>
         
-        <div className="mb-8">
+        <div className="mb-4">
           <Input
             type="email"
             placeholder="Enter your email"
@@ -51,18 +51,18 @@ export default function Step1Email({ onNext }: Step1EmailProps) {
             autoFocus
           />
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={handleContinue}
-          isLoading={isLoading}
-        >
-          Continue
-        </Button>
+        
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={handleContinue}
+            isLoading={isLoading}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   )

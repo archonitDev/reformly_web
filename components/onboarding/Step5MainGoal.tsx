@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import Image from 'next/image'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
 import { motion } from 'framer-motion'
@@ -15,41 +15,40 @@ const goals = [
     id: 'lose-weight',
     title: 'Lose Weight',
     description: 'Drop extra pounds without stress',
-    icon: '🔥',
+    icon: '/logos/lose_weight.png',
   },
   {
     id: 'find-self-love',
     title: 'Find Self-Love',
     description: 'Drop extra pounds without stress',
-    icon: '❤️',
+    icon: '/logos/self_love.png',
   },
   {
     id: 'build-muscle',
     title: 'Build Muscle',
     description: 'Strengthen and define your muscles',
-    icon: '💪',
+    icon: '/logos/build_muscle.png',
   },
   {
     id: 'keep-fit',
     title: 'Keep fit',
     description: 'Stay in shape, balanced & confident',
-    icon: '📦',
+    icon: '/logos/keep_fit.png',
   },
 ]
 
 export default function Step5MainGoal({ onNext }: Step5MainGoalProps) {
-  const { aboutYou, setAboutYou } = useOnboardingStore()
-  const [selected, setSelected] = useState<string | null>(aboutYou.mainGoal)
+  const mainGoal = useOnboardingStore(s => s.aboutYou.mainGoal)
+  const setAboutYou = useOnboardingStore(s => s.setAboutYou)
   
   const handleSelect = (goalId: string) => {
-    setSelected(goalId)
     setAboutYou({ mainGoal: goalId })
   }
   
   return (
     <div className="flex flex-col h-full w-full py-8 px-4">
-      <div className="flex-1 flex flex-col justify-center items-center">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800 px-2">
+      <div className="flex flex-col justify-start items-center" style={{ paddingTop: '29.76px' }}>
+      <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800 px-2">
           What&apos;s your main goal?
         </h2>
         <p className="text-sm text-gray-500 mb-6 text-center w-full max-w-md px-2">
@@ -57,52 +56,109 @@ export default function Step5MainGoal({ onNext }: Step5MainGoalProps) {
         </p>
         
         
-        <div className="w-full space-y-3 max-w-md px-2">
-          {goals.map((goal) => (
-            <motion.button
-              key={goal.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleSelect(goal.id)}
-              className={`
-                w-full py-3 px-4 rounded-2xl border-2 transition-all flex items-center gap-3
-                ${selected === goal.id
-                  ? 'border-primary bg-primary-light'
-                  : 'border-gray-200 bg-white hover:border-primary/50'
-                }
-              `}
-            >
-              <div className="text-xl flex-shrink-0">{goal.icon}</div>
-              <div className="flex-1 text-left">
-                <div className="font-semibold text-base mb-0.5">{goal.title}</div>
-                <div className="text-xs text-gray-600">{goal.description}</div>
-              </div>
-              <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
-                ${selected === goal.id
-                  ? 'border-gray-800 bg-white'
-                  : 'border-gray-300'
-                }">
-                {selected === goal.id && (
-                  <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </div>
-            </motion.button>
-          ))}
+        <div className="w-full space-y-3 px-2 mb-4" style={{ maxWidth: 'calc(28rem + 10%)' }}>
+          {goals.map((goal) => {
+            const isSelected = mainGoal === goal.id
+            
+            return (
+              <motion.button
+                key={goal.id}
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleSelect(goal.id)}
+                className={`
+                  w-full py-3 px-4 rounded-2xl border-2 transition-all flex items-center gap-3
+                  ${isSelected
+                    ? 'border-black bg-white'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                  }
+                `}
+              >
+                <div className="flex-shrink-0">
+                  <Image
+                    src={goal.icon}
+                    alt={goal.title}
+                    width={32}
+                    height={32}
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="font-semibold text-base mb-0.5">{goal.title}</div>
+                  <div className="text-xs text-gray-600">{goal.description}</div>
+                </div>
+                <div className="flex-shrink-0" style={{ flexShrink: 0, width: '24px', height: '24px', position: 'relative', zIndex: 100 }}>
+                  {isSelected ? (
+                    <div 
+                      style={{ 
+                        width: '24px', 
+                        height: '24px',
+                        borderRadius: '50%',
+                        border: '2px solid #000000',
+                        backgroundColor: '#000000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        boxSizing: 'border-box',
+                        zIndex: 100,
+                        opacity: 1,
+                        visibility: 'visible'
+                      }}
+                      aria-label="Selected"
+                    >
+                      <svg 
+                        width="14" 
+                        height="14" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        xmlns="http://www.w3.org/2000/svg"
+                        style={{ 
+                          display: 'block',
+                          opacity: 1,
+                          visibility: 'visible'
+                        }}
+                      >
+                        <path 
+                          d="M5 13l4 4L19 7" 
+                          stroke="#ffffff" 
+                          strokeWidth="3" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
+                          fill="none"
+                        />
+                      </svg>
+                    </div>
+                  ) : (
+                    <div 
+                      style={{ 
+                        width: '24px', 
+                        height: '24px',
+                        borderRadius: '50%',
+                        border: '2px solid #d1d5db',
+                        backgroundColor: 'transparent',
+                        boxSizing: 'border-box'
+                      }}
+                    ></div>
+                  )}
+                </div>
+              </motion.button>
+            )
+          })}
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
-            <Button
-              variant="primary"
-              className="w-full py-2.5 text-base min-w-[300px]" 
-              onClick={onNext}
-            >
-              Next
-            </Button>
+        
+        <div className="mt-4 w-full px-2" style={{ maxWidth: 'calc(28rem + 10%)' }}>
+          <div className="flex justify-center px-4">
+            <div className="w-full">
+              <Button
+                variant="primary"
+                className="w-full py-2.5 text-base min-w-[300px]" 
+                onClick={onNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -11,16 +11,14 @@ interface Step6MotivationProps {
 export default function Step6Motivation({ onNext }: Step6MotivationProps) {
   return (
     <div className="flex flex-col h-full w-full py-8 px-4">
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <div className="w-full max-w-lg px-2 mb-8 -mt-[10%]">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-center text-gray-800"
-          >
-            We&apos;ve helped thousands <br/>do it,you&apos;re next.
-          </motion.h2>
-        </div>
+      <div className="flex flex-col justify-start items-center" style={{ paddingTop: '29.76px' }}>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800 px-2"
+        >
+          We&apos;ve helped thousands <br/>do it, you&apos;re next.
+        </motion.h2>
         
         <div className="relative w-full max-w-lg px-2 flex items-end gap-3">
           {/* Circular reformly badge - avatar */}
@@ -48,18 +46,18 @@ export default function Step6Motivation({ onNext }: Step6MotivationProps) {
             </motion.div>
           </div>
         </div>
-      </div>
-      
-      <div className="sticky bottom-0 pb-2 pt-4 bg-white border-t border-gray-100">
-        <div className="flex justify-center px-4">
-          <div className="w-full max-w-md">
-            <Button
-              variant="primary"
-              className="w-full py-2.5 text-base min-w-[300px]" 
-              onClick={onNext}
-            >
-              Next
-            </Button>
+        
+        <div className="mt-4">
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-md">
+              <Button
+                variant="primary"
+                className="w-full py-2.5 text-base min-w-[300px]" 
+                onClick={onNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>
