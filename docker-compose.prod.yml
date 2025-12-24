@@ -6,6 +6,8 @@ services:
     container_name: reformly-web
     environment:
       - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - PORT=3000
     restart: unless-stopped
     # No ports exposed - using reverse proxy with domain on server
     # No volumes - using built image
