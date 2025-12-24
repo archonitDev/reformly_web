@@ -1,4 +1,4 @@
-.PHONY: help up down clean logs build rebuild ps restart shell up-prod down-prod up-prod-local down-prod-local
+.PHONY: help up down clean logs build rebuild ps restart shell up-prod down-prod up-prod-local down-prod-local check-prod
 
 # Default target
 help:
@@ -67,3 +67,17 @@ up-prod-local:
 
 down-prod-local:
 	docker compose -f docker-compose.prod.local.yml down
+
+# Diagnostic commands
+check-prod:
+	@echo "=== Container Status ==="
+	@docker ps | grep reformly-web || echo "Container not running"
+	@echo ""
+	@echo "=== Container IP ==="
+	@docker inspect reformly-web 2>/dev/null | grep -A 5 "NetworkSettings" | grep "IPAddress" || echo "Cannot get IP"
+	@echo ""
+	@echo "=== Testing from inside container ==="
+	@docker exec reformly-web wget -qO- http://localhost:3000/onboarding 2>/dev/null | head -c 200 || echo "Connection failed"
+	@echo ""
+	@echo "=== Network info ==="
+	@docker network ls | grep reformly || echo "No reformly network found"

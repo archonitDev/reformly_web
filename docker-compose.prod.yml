@@ -9,7 +9,17 @@ services:
       - HOSTNAME=0.0.0.0
       - PORT=3000
     restart: unless-stopped
+    networks:
+      - default
+      - traefik_network
     # No ports exposed - using reverse proxy with domain on server
     # No volumes - using built image
     # For local testing, use docker-compose.prod.local.yml
+
+networks:
+  default:
+    name: reformly_web_default
+  traefik_network:
+    external: true
+    name: docker_default
 
