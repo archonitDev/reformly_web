@@ -21,21 +21,14 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy package files
-COPY package.json package-lock.json* ./
-
-# Install only production dependencies
-RUN npm install --legacy-peer-deps --production
-
-# Copy built application from builder
-COPY --from=builder /app/.next ./.next
+# Copy standalone output from builder
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js* ./
-COPY --from=builder /app/package.json ./package.json
 
 # Expose port
 EXPOSE 3000
 
-# Start production server
-CMD ["npm", "run", "start"]
+# Start production server using standalone mode
+CMD ["node", "server.js"]
 

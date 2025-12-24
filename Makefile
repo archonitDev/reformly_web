@@ -53,6 +53,7 @@ shell:
 # Production commands
 up-prod:
 	docker compose -f docker-compose.prod.yml down || true
+	docker rm -f reformly-web || true
 	docker compose -f docker-compose.prod.yml up --build -d
 
 down-prod:
@@ -61,6 +62,7 @@ down-prod:
 # Production local testing commands
 up-prod-local:
 	docker compose -f docker-compose.prod.local.yml down || true
+	docker rm -f reformly-web || true
 	docker compose -f docker-compose.prod.local.yml up --build -d
 
 down-prod-local:
