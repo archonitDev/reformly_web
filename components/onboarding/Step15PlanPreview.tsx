@@ -273,7 +273,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
             <div className="flex-shrink-0 hidden lg:block absolute" style={{ right: '-210px', bottom: '0', zIndex: 10 }}>
               <div className="relative" style={{ width: '155px', height: '230px' }}>
                 <Image
-                  src="/images/women.png" 
+                  src="/images/woman.png" 
                   alt="Woman"
                   fill
                   className="object-contain object-bottom"
