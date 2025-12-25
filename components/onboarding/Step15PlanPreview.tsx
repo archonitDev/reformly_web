@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import Button from '../Button'
 import BackButton from '../BackButton'
 import { useOnboardingStore } from '@/lib/store'
@@ -52,9 +53,12 @@ const plans = [
 
 export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewProps) {
   const { aboutYou, subscription, setSubscription, profile } = useOnboardingStore()
-  const [selectedPlan, setSelectedPlan] = useState<string>(subscription.selectedPlanId || '4-week')
+  // Initialize from store or default to '4-week'
+  const initialPlan = subscription?.selectedPlanId || '4-week'
+  const [selectedPlan, setSelectedPlan] = useState<string>(initialPlan)
   const [titleWidth, setTitleWidth] = useState<number>(0)
   const titleRef = useRef<HTMLHeadingElement>(null)
+  const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set([0])) // First FAQ open by default
   
   // Get username from profile or use default
   const username = profile.username || 'Mex'
@@ -62,10 +66,6 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   const mainGoal = aboutYou.mainGoal ? goalsMap[aboutYou.mainGoal] || aboutYou.mainGoal : 'Lose weight'
   const activities = aboutYou.activities || []
   const displayActivities = activities.slice(0, 2) // Take first 2 activities
-  
-  useEffect(() => {
-    setSubscription({ selectedPlanId: selectedPlan })
-  }, [selectedPlan, setSubscription])
   
   // Measure title width and sync container width
   useEffect(() => {
@@ -95,8 +95,15 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   const graphStartX = 6.5 // Starting point X coordinate (left circle position)
   const graphStartY = 113.5 // Starting point Y coordinate (left circle position)
   
-  const handlePlanSelect = (planId: string) => {
+  const handlePlanSelect = (planId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    console.log('[Step15] handlePlanSelect called with planId:', planId, 'current selectedPlan:', selectedPlan)
     setSelectedPlan(planId)
+    setSubscription({ selectedPlanId: planId })
+    // Verify state update
+    setTimeout(() => {
+      console.log('[Step15] After update, selectedPlan should be:', planId)
+    }, 0)
   }
   
   const handleGetPlan = () => {
@@ -108,42 +115,45 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   return (
     <div className="min-h-screen bg-white w-full">
       {/* Header */}
-      <div className="w-full px-6 pt-6 pb-4">
-        <div className="flex items-center gap-3 mb-4">
+      <div className="w-full px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           <BackButton onClick={onBack} />
-          <h1 className="font-plus-jakarta text-[28px] font-bold leading-[33.6px] text-black pl-2">reformly</h1>
+          <h1 className="font-plus-jakarta text-xl sm:text-2xl md:text-[28px] font-bold leading-tight sm:leading-[33.6px] text-black pl-2">reformly</h1>
         </div>
       </div>
       
       {/* Main Content - Scrollable */}
-      <div className="px-6 pb-12">
+      <div className="px-4 sm:px-6 pb-8 sm:pb-12">
         {/* Title and Plan Summary Container */}
-        <div className="mb-12 flex flex-col items-center">
+        <div className="mb-8 sm:mb-12 flex flex-col items-center">
           {/* Title */}
           <h2 
             ref={titleRef}
-            className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800"
+            className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2"
           >
             {username}, your personalized plan is ready!
           </h2>
           
           {/* Plan Summary Section - matches title width */}
           <div 
-            className="flex flex-col lg:flex-row items-start justify-between" 
-            style={{ width: titleWidth > 0 ? `${titleWidth}px` : 'auto' }}
+            className="flex flex-col lg:flex-row items-start" 
+            style={{ 
+              width: titleWidth > 0 ? `${titleWidth}px` : '100%',
+              maxWidth: '100%'
+            }}
           >
             {/* Left: Chart */}
-            <div className="flex-shrink-0">
-              <div className="bg-white rounded-2xl py-12 px-2 relative" style={{ minHeight: '255px' }}>
-                <div className="relative flex flex-col items-center justify-center" style={{ width: `${graphWidth}px` }}>
-                {/* Graph SVG */}
-                <div className="relative" style={{ width: `${graphWidth}px`, height: `${graphHeight}px` }}>
+            <div className="flex-shrink-0 w-full lg:w-auto mb-6 lg:mb-0">
+              <div className="bg-white rounded-2xl py-6 sm:py-8 md:py-12 px-2 relative" style={{ minHeight: '200px' }}>
+                <div className="relative flex flex-col items-center justify-center mx-auto" style={{ width: '100%', maxWidth: `${graphWidth}px` }}>
+                  {/* Graph SVG */}
+                <div className="relative w-full" style={{ maxWidth: `${graphWidth}px`, aspectRatio: `${graphWidth}/${graphHeight}` }}>
                   <Image
                     src="/logos/graph.svg"
                     alt="Progress Graph"
                     width={graphWidth}
                     height={graphHeight}
-                    className="object-contain"
+                    className="object-contain w-full h-full"
                   />
                   
                   {/* "New" label above the starting point */}
@@ -162,7 +172,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 </div>
                 
                 {/* Week gradation below the graph */}
-                <div className="relative mt-4" style={{ width: `${graphWidth}px`, height: '20px' }}>
+                <div className="relative mt-4 w-full" style={{ maxWidth: `${graphWidth}px`, height: '20px' }}>
                   {xAxisLabels.map((label, index) => {
                     // Calculate x position for each week label
                     // Week 1 at start (0%), Week 4 at 33%, Week 8 at 66%, Week 12 at end (100%)
@@ -186,18 +196,18 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                     )
                   })}
                 </div>
+                </div>
               </div>
             </div>
-          </div>
-          
+            
             {/* Right: Info Card and Image */}
-            <div className="flex flex-col lg:flex-row gap-0 items-start flex-shrink-0 relative">
+            <div className="flex flex-col lg:flex-row gap-0 items-start flex-shrink-0 relative lg:ml-12 w-full lg:w-auto">
             {/* Info Card */}
-            <div className="bg-[#EAE2FF] rounded-2xl p-6 w-full lg:w-auto relative" style={{ minWidth: '330px', height: '210px' }}>
-              <div className="h-full flex flex-col justify-between py-2">
+            <div className="bg-[#EAE2FF] rounded-2xl p-4 sm:p-5 md:p-6 w-full lg:w-auto relative" style={{ minHeight: '180px', minWidth: '180%' }}>
+              <div className="h-full flex flex-col gap-2 py-2">
                 {/* Duration */}
                 <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <div className="flex-shrink-0 relative" style={{ width: '42px', height: '42px' }}>
                     <Image
                       src="/logos/duration.svg"
                       alt="Duration"
@@ -213,7 +223,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 
                 {/* Goal */}
                 <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <div className="flex-shrink-0 relative" style={{ width: '42px', height: '42px' }}>
                     <Image
                       src="/logos/goal.svg"
                       alt="Goal"
@@ -229,22 +239,24 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 
                 {/* Interests */}
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 relative pt-1" style={{ width: '32px', height: '32px' }}>
+                  <div className="flex-shrink-0 relative pt-1" style={{ width: '42px', height: '42px' }}>
                     <Image
-                      src="/logos/self_love.svg"
+                      src="/logos/self_love_2.svg"
                       alt="Interests"
                       fill
                       className="object-contain"
                     />
                   </div>
                   <div className="flex-1">
-                    <div className="space-y-1 mb-1">
-                      {displayActivities.length > 0 ? (
-                        displayActivities.map((activity, idx) => (
-                          <div key={idx} className="text-gray-800 text-sm font-bold" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                            {activity}
-                          </div>
-                        ))
+                    <div className="mb-1">
+                      {displayActivities.length === 1 ? (
+                        <div className="text-gray-800 text-sm font-bold" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {displayActivities[0]}
+                        </div>
+                      ) : displayActivities.length === 2 ? (
+                        <div className="text-gray-800 text-sm font-bold" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {displayActivities[0]} and {displayActivities[1]}
+                        </div>
                       ) : (
                         <div className="text-gray-800 text-sm font-bold" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
                           Get lean and strong
@@ -258,10 +270,22 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
             </div>
             
             {/* Woman Image - positioned over the card from right side, height matches card */}
-            <div className="flex-shrink-0 hidden lg:block absolute" style={{ right: '-30px', bottom: '0', zIndex: 10 }}>
-              <div className="relative" style={{ width: '230px', height: '230px' }}>
+            <div className="flex-shrink-0 hidden lg:block absolute" style={{ right: '-210px', bottom: '0', zIndex: 10 }}>
+              <div className="relative" style={{ width: '155px', height: '230px' }}>
                 <Image
-                  src="/images/women.png"
+                  src="/images/women.png" 
+                  alt="Woman"
+                  fill
+                  className="object-contain object-bottom"
+                  priority
+                />
+              </div>
+            </div>
+            {/* Mobile: Show image below card */}
+            <div className="flex-shrink-0 lg:hidden w-full mt-4 flex justify-center">
+              <div className="relative" style={{ width: '200px', height: '160px' }}>
+                <Image
+                  src="/images/women.png" 
                   alt="Woman"
                   fill
                   className="object-contain object-bottom"
@@ -271,128 +295,859 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
             </div>
           </div>
         </div>
-        </div>
         
+        {/* Container for Payment Plans and all content below - sets consistent width */}
+        <div className="max-w-7xl mx-auto">
         {/* Payment Plans */}
-        <div className="mb-8 max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-end">
             {plans.map((plan) => {
               const isSelected = selectedPlan === plan.id
               const isPopular = plan.id === '4-week'
+              const isBestValue = plan.id === 'yearly'
+              
+              // Debug: verify selection state
+              if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+                if (isSelected) {
+                  console.log(`[Step15] Plan ${plan.id} is SELECTED. selectedPlan=${selectedPlan}, isSelected=${isSelected}`)
+                }
+              }
               
               return (
-                <div
-                  key={plan.id}
-                  onClick={() => handlePlanSelect(plan.id)}
+                <motion.div
+                  key={`${plan.id}-${isSelected}`}
+                  onClick={(e) => handlePlanSelect(plan.id, e)}
+                  whileTap={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  initial={false}
                   className={`
-                    relative rounded-2xl p-6 border-2 cursor-pointer transition-all
-                    ${isSelected && isPopular
-                      ? 'bg-[#5630B0] border-[#5630B0]'
-                      : isSelected
-                      ? 'bg-white border-black'
+                    relative rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col w-full md:flex-1
+                    ${isSelected
+                      ? 'bg-[#EAE2FF] border-[#5630B0]'
                       : 'bg-white border-gray-200'
                     }
                   `}
                 >
-                  {/* Badge */}
+                  {/* Badge at top */}
                   {plan.badge && (
                     <div className={`
-                      text-xs font-bold mb-2
-                      ${isPopular && isSelected 
-                        ? 'text-white' 
-                        : isPopular 
-                        ? 'text-white' 
-                        : 'text-[#5630B0]'
+                      text-xs font-bold uppercase px-4 py-2 rounded-t-l
+                      ${isSelected
+                        ? 'bg-[#5630B0] text-white'
+                        : 'bg-[#EAE2FF] text-[#5630B0]'
                       }
                     `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
                       {plan.badge}
                     </div>
                   )}
                   
-                  {/* Title */}
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className={`
-                      text-lg font-bold
-                      ${isPopular && isSelected ? 'text-white' : 'text-gray-800'}
-                    `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                      {plan.title}
-                    </h3>
+                  <div className="p-6 flex-1 flex flex-col">
+                    {/* Title and Checkbox */}
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-3xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        {plan.title}
+                      </h3>
+                      
+                      {/* Checkbox */}
+                      <div 
+                        className="flex-shrink-0" 
+                        style={{ 
+                          flexShrink: 0, 
+                          width: '24px', 
+                          height: '24px', 
+                          position: 'relative', 
+                          zIndex: 100 
+                        }}
+                      >
+                        {isSelected ? (
+                          <div 
+                            style={{ 
+                              width: '24px', 
+                              height: '24px',
+                              borderRadius: '50%',
+                              border: '2px solid #000000',
+                              backgroundColor: '#000000',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                              boxSizing: 'border-box',
+                              zIndex: 100,
+                              opacity: 1,
+                              visibility: 'visible'
+                            }}
+                            aria-label="Selected"
+                          >
+                            <svg 
+                              width="14" 
+                              height="14" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ 
+                                display: 'block',
+                                opacity: 1,
+                                visibility: 'visible'
+                              }}
+                            >
+                              <path 
+                                d="M5 13l4 4L19 7" 
+                                stroke="#ffffff" 
+                                strokeWidth="3" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                                fill="none"
+                              />
+                            </svg>
+                          </div>
+                        ) : (
+                          <div 
+                            style={{ 
+                              width: '24px', 
+                              height: '24px',
+                              borderRadius: '50%',
+                              border: '2px solid #D1D5DB',
+                              backgroundColor: '#FFFFFF',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
                     
-                    {/* Checkbox */}
-                    <div className="flex-shrink-0">
-                      {isSelected ? (
-                        <div className={`
-                          w-6 h-6 rounded-full flex items-center justify-center
-                          ${isPopular ? 'bg-black' : 'bg-black'}
-                        `}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                            <path
-                              d="M5 13l4 4L19 7"
-                              stroke="#ffffff"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
+                    {/* Trial Button - Purple pill */}
+                    <div className="bg-[#5630B0] rounded-full px-4 py-2 mb-4 text-left" style={{ width: '135px' }}>
+                      <span className="text-sm font-medium text-white" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        7-day free trial
+                      </span>
+                    </div>
+                    
+                    {/* Divider */}
+                    <div className="border-t mb-4" style={{ borderColor: '#D7DCDF' }}></div>
+                    
+                    {/* Price - pushed to bottom */}
+                    <div className="flex items-baseline gap-2 mt-auto">
+                      <div className="text-2xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        {plan.price}
+                      </div>
+                      {plan.pricePerWeek && (
+                        <div className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.pricePerWeek}
                         </div>
-                      ) : (
-                        <div className="w-6 h-6 rounded-full border-2 border-gray-300"></div>
                       )}
                     </div>
                   </div>
-                  
-                  {/* Trial Button */}
-                  <div className={`
-                    rounded-lg px-4 py-2 mb-4 text-center
-                    ${isPopular && isSelected
-                      ? 'bg-white/20'
-                      : 'bg-[#EAE2FF]'
-                    }
-                  `}>
-                    <span className={`
-                      text-sm font-medium
-                      ${isPopular && isSelected ? 'text-white' : 'text-[#5630B0]'}
-                    `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                      7-day free trial
-                    </span>
-                  </div>
-                  
-                  {/* Price */}
-                  <div className={`
-                    ${isPopular && isSelected ? 'bg-white/10' : 'bg-gray-50'}
-                    rounded-lg p-4
-                  `}>
-                    <div className={`
-                      text-2xl font-bold
-                      ${isPopular && isSelected ? 'text-white' : 'text-gray-800'}
-                    `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                      {plan.price}
-                    </div>
-                    {plan.pricePerWeek && (
-                      <div className={`
-                        text-sm mt-1
-                        ${isPopular && isSelected ? 'text-white/80' : 'text-gray-600'}
-                      `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                        ({plan.pricePerWeek})
-                      </div>
-                    )}
-                  </div>
-                </div>
+                </motion.div>
               )
             })}
           </div>
         </div>
         
         {/* Get My Plan Button */}
-        <div className="flex justify-center">
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full max-w-[340px] py-3 sm:py-[13.6px] text-sm sm:text-base md:text-[17px] font-bold"
+              onClick={handleGetPlan}
+            >
+              GET MY PLAN
+            </Button>
+          </div>
+          
+          {/* Features Section */}
+          <div className="bg-[#F6F2FF] rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
+            
+            
+            {/* Features List */}
+            <div className="w-full lg:w-1/2 space-y-4">
+              {/* Feature 1 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/muscle_plan.svg"
+                    alt="Build Muscle"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">Build strength and sculpt your body</span>
+                    <br />
+                    with elegant, low-impact Pilates workouts
+                  </p>
+                </div>
+              </div>
+              
+              {/* Feature 2 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/up.svg"
+                    alt="Progress"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">Beginner to advanced friendly</span>
+                    <br />
+                    clear guidance to improve posture, flexibility and control
+                  </p>
+                </div>
+              </div>
+              
+              {/* Feature 3 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/time_plan.svg"
+                    alt="Duration"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">20 min workouts from home</span>
+                    <br />
+                    designed to fit effortlessly into your day
+                  </p>
+                </div>
+              </div>
+              
+              {/* Feature 4 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/goal_plan.svg"
+                    alt="Goals"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">New programs, challenges & more</span>
+                    <br />
+                    stronger workouts, bolder challenges, bigger results
+                  </p>
+                </div>
+              </div>
+              
+              {/* Feature 5 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/heart_plan.svg"
+                    alt="Community"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">A supportive community</span>
+                    <br />
+                    connect, share progress, stay accountable and feel supported
+                  </p>
+                </div>
+              </div>
+              
+              {/* Feature 6 */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/logos/flower_plan.svg"
+                    alt="Wellness"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-800 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    <span className="font-bold">Wellness beyond workouts</span>
+                    <br />
+                    expert guidance, routines and habits for long-term results
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Phones Image */}
+            <div className="w-full lg:w-1/2 flex justify-center items-center mt-4 lg:mt-0">
+              <div className="relative w-fit max-w-full flex justify-center items-center" style={{ aspectRatio: 'auto', position: 'relative' }}>
+                <Image
+                  src="/images/phones.png"
+                  alt="Reformly App Preview"
+                  width={400}
+                  height={500}
+                  className="object-contain mx-auto w-full max-w-[300px] sm:max-w-[400px]"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Logos Section */}
+        <div className="flex justify-center items-center mb-6 sm:mb-8 px-2">
+          <div className="relative w-full max-w-[700px]" style={{ height: '150px', maxHeight: '200px' }}>
+            <Image
+              src="/logos/logos_plan.svg"
+              alt="Featured in"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
+        
+        {/* Results Section */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-8 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+            Results we're proud of
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            {/* Rachel Card */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div className="relative w-full">
+                <Image
+                  src="/photos/woman_1_plan.png"
+                  alt="Rachel Transformation"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              <div className="p-4">
+                {/* Name and Age with Checkmark */}
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Rachel, 27</span>
+                  <div className="relative" style={{ width: '16px', height: '16px' }}>
+                    <Image
+                      src="/logos/check_woman_plan.svg"
+                      alt="Verified"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+                {/* Testimonial */}
+                <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                  Consistency came easy! You work out from home, just 20 minutes a day, and it's actually fun
+                </p>
+              </div>
+            </div>
+            
+            {/* Kate Card */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div className="relative w-full">
+                <Image
+                  src="/photos/woman_2_plan.png"
+                  alt="Kate Transformation"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              <div className="p-4">
+                {/* Name and Age with Checkmark */}
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Kate, 42</span>
+                  <div className="relative" style={{ width: '16px', height: '16px' }}>
+                    <Image
+                      src="/logos/check_woman_plan.svg"
+                      alt="Verified"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+                {/* Testimonial */}
+                <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                  I went from 187 lbs, the heaviest I've ever been, to just over 145 lbs in only 60 days. Reformly gave me back my confidence
+                </p>
+              </div>
+            </div>
+            
+            {/* Amanda Card */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div className="relative w-full">
+                <Image
+                  src="/photos/woman_3_plan.png"
+                  alt="Amanda Transformation"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              <div className="p-4">
+                {/* Name and Age with Checkmark */}
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Amanda, 39</span>
+                  <div className="relative" style={{ width: '16px', height: '16px' }}>
+                    <Image
+                      src="/logos/check_woman_plan.svg"
+                      alt="Verified"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+                {/* Testimonial */}
+                <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                  I'm almost 100 lbs down. Before starting this program, I didn't think I had the consistency in me to get this far.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* FAQ Section */}
+        <div className="mb-6 sm:mb-8">
+          <div className="bg-[#F6F2FF] rounded-2xl p-4 sm:p-6 md:p-8">
+            <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+              People often ask
+            </h2>
+            
+            <div className="space-y-0">
+              {/* FAQ Item 1 */}
+              <div className="border-b border-gray-300 last:border-b-0">
+                <button
+                  onClick={() => {
+                    const newOpenFaqs = new Set(openFaqs)
+                    if (newOpenFaqs.has(0)) {
+                      newOpenFaqs.delete(0)
+                    } else {
+                      newOpenFaqs.add(0)
+                    }
+                    setOpenFaqs(newOpenFaqs)
+                  }}
+                  className="w-full flex items-center justify-between py-4 text-left"
+                >
+                  <span className="font-bold text-gray-800 text-lg pr-4" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    How does the Reformly app help me get results?
+                  </span>
+                  <motion.div
+                    animate={{ rotate: openFaqs.has(0) ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-[#5630B0]"
+                    >
+                      <path
+                        d="M6 9L12 15L18 9"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </motion.div>
+                </button>
+                {openFaqs.has(0) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="pb-4 text-gray-700 text-base leading-relaxed pl-0" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                      The Reformly app combines guided Pilates workouts, structured programs and progress tracking to help you build strength, improve posture and stay consistent. Short, effective sessions make it easy to see results without overwhelming your schedule.
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+              
+              {/* FAQ Item 2 */}
+              <div className="border-b border-gray-300 last:border-b-0">
+                <button
+                  onClick={() => {
+                    const newOpenFaqs = new Set(openFaqs)
+                    if (newOpenFaqs.has(1)) {
+                      newOpenFaqs.delete(1)
+                    } else {
+                      newOpenFaqs.add(1)
+                    }
+                    setOpenFaqs(newOpenFaqs)
+                  }}
+                  className="w-full flex items-center justify-between py-4 text-left"
+                >
+                  <span className="font-bold text-gray-800 text-lg pr-4" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    Is it okay that I'm a beginner?
+                  </span>
+                  <motion.div
+                    animate={{ rotate: openFaqs.has(1) ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-[#5630B0]"
+                    >
+                      <path
+                        d="M6 9L12 15L18 9"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </motion.div>
+                </button>
+                {openFaqs.has(1) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="pb-4 text-gray-700 text-base leading-relaxed pl-0" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                      Absolutely! Reformly is designed for all fitness levels, from complete beginners to advanced practitioners. Our programs start with foundational movements and gradually progress, ensuring you build strength and confidence at your own pace. Each workout includes clear instructions and modifications to suit your current level.
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+              
+              {/* FAQ Item 3 */}
+              <div className="border-b border-gray-300 last:border-b-0">
+                <button
+                  onClick={() => {
+                    const newOpenFaqs = new Set(openFaqs)
+                    if (newOpenFaqs.has(2)) {
+                      newOpenFaqs.delete(2)
+                    } else {
+                      newOpenFaqs.add(2)
+                    }
+                    setOpenFaqs(newOpenFaqs)
+                  }}
+                  className="w-full flex items-center justify-between py-4 text-left"
+                >
+                  <span className="font-bold text-gray-800 text-lg pr-4" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                    How will I access my plan?
+                  </span>
+                  <motion.div
+                    animate={{ rotate: openFaqs.has(2) ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-[#5630B0]"
+                    >
+                      <path
+                        d="M6 9L12 15L18 9"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </motion.div>
+                </button>
+                {openFaqs.has(2) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="pb-4 text-gray-700 text-base leading-relaxed pl-0" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                      Once you complete your purchase, you'll receive an email with instructions to download the Reformly app. Simply sign in with your account credentials, and your personalized plan will be ready to use immediately. You can access your workouts, track your progress, and connect with the community all from the app on your phone or tablet.
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Community Testimonials Section */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-8 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+            What our community says
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            {/* Sophie Card */}
+            <div className="bg-[#F6F2FF] rounded-2xl p-6 shadow-sm">
+              <div className="mb-3">
+                <span className="font-bold text-gray-800 text-lg" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Sophie</span>
+              </div>
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#FFC400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                This is the first workout plan I've actually stuck with. Even after a long day of work the 20 min sessions make it easy to stay consistent!
+              </p>
+            </div>
+            
+            {/* Jane Card */}
+            <div className="bg-[#F6F2FF] rounded-2xl p-6 shadow-sm">
+              <div className="mb-3">
+                <span className="font-bold text-gray-800 text-lg" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Jane</span>
+              </div>
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#FFC400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                Best purchase I've made all year. I wasted so much money on gym memberships I never used.
+              </p>
+            </div>
+            
+            {/* Cheryl Card */}
+            <div className="bg-[#F6F2FF] rounded-2xl p-6 shadow-sm">
+              <div className="mb-3">
+                <span className="font-bold text-gray-800 text-lg" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>Cheryl</span>
+              </div>
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#FFC400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                After pregnancy, I didn't feel like myself anymore. Reformly is so easy to fit in my routine, the program helped me feel confident again.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Duplicate Payment Plans */}
+        <div className="mb-6 sm:mb-8">
+        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-8 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+          Get visible results in 4 weeks!
+            </h2>
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-end">
+            {plans.map((plan) => {
+              const isSelected = selectedPlan === plan.id
+              const isPopular = plan.id === '4-week'
+              const isBestValue = plan.id === 'yearly'
+              
+              return (
+                <motion.div
+                  key={`duplicate-${plan.id}-${isSelected}`}
+                  onClick={(e) => handlePlanSelect(plan.id, e)}
+                  whileTap={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  initial={false}
+                  className={`
+                    relative rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col w-full md:flex-1
+                    ${isSelected
+                      ? 'bg-[#EAE2FF] border-[#5630B0]'
+                      : 'bg-white border-gray-200'
+                    }
+                  `}
+                >
+                  {/* Badge at top */}
+                  {plan.badge && (
+                    <div className={`
+                      text-xs font-bold uppercase px-4 py-2 rounded-t-l
+                      ${isSelected
+                        ? 'bg-[#5630B0] text-white'
+                        : 'bg-[#EAE2FF] text-[#5630B0]'
+                      }
+                    `} style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                      {plan.badge}
+                    </div>
+                  )}
+                  
+                  <div className="p-6 flex-1 flex flex-col">
+                    {/* Title and Checkbox */}
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-3xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        {plan.title}
+                      </h3>
+                      
+                      {/* Checkbox */}
+                      <div 
+                        className="flex-shrink-0" 
+                        style={{ 
+                          flexShrink: 0, 
+                          width: '24px', 
+                          height: '24px', 
+                          position: 'relative', 
+                          zIndex: 100 
+                        }}
+                      >
+                        {isSelected ? (
+                          <div 
+                            style={{ 
+                              width: '24px', 
+                              height: '24px',
+                              borderRadius: '50%',
+                              border: '2px solid #000000',
+                              backgroundColor: '#000000',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                              boxSizing: 'border-box',
+                              zIndex: 100,
+                              opacity: 1,
+                              visibility: 'visible'
+                            }}
+                            aria-label="Selected"
+                          >
+                            <svg 
+                              width="14" 
+                              height="14" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ 
+                                display: 'block',
+                                opacity: 1,
+                                visibility: 'visible'
+                              }}
+                            >
+                              <path 
+                                d="M5 13l4 4L19 7" 
+                                stroke="#ffffff" 
+                                strokeWidth="3" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                                fill="none"
+                              />
+                            </svg>
+                          </div>
+                        ) : (
+                          <div 
+                            style={{ 
+                              width: '24px', 
+                              height: '24px',
+                              borderRadius: '50%',
+                              border: '2px solid #D1D5DB',
+                              backgroundColor: '#FFFFFF',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Trial Button - Purple pill */}
+                    <div className="bg-[#5630B0] rounded-full px-4 py-2 mb-4 text-left" style={{ width: '135px' }}>
+                      <span className="text-sm font-medium text-white" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        7-day free trial
+                      </span>
+                    </div>
+                    
+                    {/* Divider */}
+                    <div className="border-t mb-4" style={{ borderColor: '#D7DCDF' }}></div>
+                    
+                    {/* Price - pushed to bottom */}
+                    <div className="flex items-baseline gap-2 mt-auto">
+                      <div className="text-2xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                        {plan.price}
+                      </div>
+                      {plan.pricePerWeek && (
+                        <div className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.pricePerWeek}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+        
+        {/* Duplicate Get My Plan Button */}
+        <div className="flex justify-center mb-6 sm:mb-8">
           <Button
             variant="primary"
-            size="lg"
-            className="w-full max-w-md py-4 text-lg font-bold"
+            size="md"
+            className="w-full max-w-[340px] py-3 sm:py-[13.6px] text-sm sm:text-base md:text-[17px] font-bold"
             onClick={handleGetPlan}
           >
             GET MY PLAN
           </Button>
+        </div>
+        
+        {/* Money-Back Guarantee Section */}
+        <div className="mb-6 sm:mb-8">
+          <div className="bg-[#F6F2FF] rounded-2xl p-4 sm:p-6 md:p-8 text-center">
+            {/* Shield Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="relative" style={{ width: '64px', height: '64px' }}>
+                <Image
+                  src="/logos/shield_plan.svg"
+                  alt="Money-back guarantee"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            
+            {/* Heading */}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-3 sm:mb-4 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+              30-day money-back guarantee
+            </h2>
+            
+            {/* Body Text */}
+            <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 max-w-2xl mx-auto px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+              We believe that our plan may work for you and you'll get visible results in 4 weeks! We even are ready to return your money back if you don't see visible results and can demonstrate that you followed our plan.
+            </p>
+            
+            {/* Link */}
+            <p className="text-gray-700 text-sm sm:text-base px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+              Find more about applicable limitations in our{' '}
+              <a 
+                href="https://betterme-wallpilates.com/en/money-back-policy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#5630B0] hover:underline font-medium"
+              >
+                money-back policy
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+        </div>
+        
+        {/* Copyright */}
+        <div className="fixed bottom-0 left-0 w-full bg-transparent z-50">
+          <div className="w-full h-px" style={{ backgroundColor: '#D7DCDF' }}></div>
+          <div 
+            className="pl-4 sm:pl-6 md:pl-8 pb-3 sm:pb-4 pt-2 text-gray-600 text-xs sm:text-sm font-bold text-left" 
+            style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}
+          >
+            ©2025. reformly
+          </div>
+        </div>
         </div>
       </div>
     </div>

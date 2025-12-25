@@ -15,25 +15,25 @@ const goals = [
     id: 'lose-weight',
     title: 'Lose Weight',
     description: 'Drop extra pounds without stress',
-    icon: '/logos/lose_weight.png',
+    icon: '/logos/lose_weight.svg',
   },
   {
     id: 'find-self-love',
     title: 'Find Self-Love',
     description: 'Drop extra pounds without stress',
-    icon: '/logos/self_love.png',
+    icon: '/logos/self_love_1.svg',
   },
   {
     id: 'build-muscle',
     title: 'Build Muscle',
     description: 'Strengthen and define your muscles',
-    icon: '/logos/build_muscle.png',
+    icon: '/logos/build_muscle.svg',
   },
   {
     id: 'keep-fit',
     title: 'Keep fit',
     description: 'Stay in shape, balanced & confident',
-    icon: '/logos/keep_fit.png',
+    icon: '/logos/keep_fit.svg',
   },
 ]
 
@@ -46,17 +46,17 @@ export default function Step5MainGoal({ onNext }: Step5MainGoalProps) {
   }
   
   return (
-    <div className="flex flex-col h-full w-full py-8 px-4">
+    <div className="flex flex-col h-full w-full py-6 sm:py-8 px-3 sm:px-4">
       <div className="flex flex-col justify-start items-center" style={{ paddingTop: '29.76px' }}>
-      <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800 px-2">
+      <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-3 sm:mb-4 text-center text-gray-800 px-2">
           What&apos;s your main goal?
         </h2>
-        <p className="text-sm text-gray-500 mb-6 text-center w-full max-w-md px-2">
+        <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 text-center w-full max-w-md px-2">
           This impacts key factors for your body metrics. We use this data solely to provide tailored content to you.
         </p>
         
         
-        <div className="w-full space-y-3 px-2 mb-4" style={{ maxWidth: 'calc(28rem + 10%)' }}>
+        <div className="w-full space-y-2 sm:space-y-3 px-2 mb-4" style={{ maxWidth: 'calc(28rem + 10%)' }}>
           {goals.map((goal) => {
             const isSelected = mainGoal === goal.id
             
@@ -149,11 +149,11 @@ export default function Step5MainGoal({ onNext }: Step5MainGoalProps) {
         </div>
         
         <div className="mt-4 w-full px-2" style={{ maxWidth: 'calc(28rem + 10%)' }}>
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

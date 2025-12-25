@@ -24,8 +24,8 @@ export default function Step0Welcome({ onNext }: Step0WelcomeProps) {
       </div>
       
       {/* Main content - centered but full width container */}
-      <div className="flex-1 flex flex-col items-center justify-start w-full px-6 py-8" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-12 text-center text-gray-800">
+      <div className="flex-1 flex flex-col items-center justify-start w-full px-4 sm:px-6 py-6 sm:py-8" style={{ paddingTop: '29.76px' }}>
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-8 sm:mb-12 text-center text-gray-800 px-2">
           Log in to your Account or<br />
           Create a new Account
         </h2>

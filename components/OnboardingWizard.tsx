@@ -96,10 +96,10 @@ export default function OnboardingWizard({
       
       {/* Header - full width */}
       {currentStep > 0 && currentStep !== 14 && (
-        <div className="w-full px-6 pt-6 pb-4 relative z-10">
-          <div className="flex items-center gap-3 mb-4">
+        <div className="w-full px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 relative z-10">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
             {showBackButton && <BackButton onClick={onBack} />}
-            <h1 className="font-plus-jakarta text-[28px] font-bold leading-[33.6px] text-black pl-2">reformly</h1>
+            <h1 className="font-plus-jakarta text-xl sm:text-2xl md:text-[28px] font-bold leading-tight sm:leading-[33.6px] text-black pl-2">reformly</h1>
           </div>
           <div className="relative border-t border-gray-200 w-full mb-4" style={{ height: '1px' }}>
             {showProgress && (
@@ -138,7 +138,7 @@ export default function OnboardingWizard({
               <StepComponent onNext={onNext} onBack={onBack} />
             ) : (
               <div className="w-full flex justify-center">
-                <div className="w-full" style={{ width: '30vw', minWidth: '550px', maxWidth: '690px', margin: '0 auto' }}>
+                <div className="w-full md:w-[30vw] md:min-w-[550px] md:max-w-[690px] mx-auto">
                   <StepComponent onNext={onNext} onBack={onBack} />
                 </div>
               </div>

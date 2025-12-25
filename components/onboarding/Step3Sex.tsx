@@ -12,9 +12,9 @@ interface Step3SexProps {
 }
 
 const options = [
-  { value: 'male', label: 'Male', icon: '/logos/male.png' },
-  { value: 'female', label: 'Female', icon: '/logos/female.png' },
-  { value: 'other', label: 'Other', icon: '/logos/other_gender.png' },
+  { value: 'male', label: 'Male', icon: '/logos/male.svg' },
+  { value: 'female', label: 'Female', icon: '/logos/female.svg' },
+  { value: 'other', label: 'Other', icon: '/logos/other_gender.svg' },
 ]
 
 export default function Step3Sex({ onNext }: Step3SexProps) {
@@ -35,17 +35,17 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start flex-1" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-3 sm:mb-4 text-center text-gray-800 px-2">
           What is your sex?
         </h2>
         
-        <p className="text-base text-gray-700 mb-8 text-center px-4">
+        <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8 text-center px-2 sm:px-4">
           This impacts key factors for your body metrics. We use this data solely to provide tailored content to you.
         </p>
         
-        <div className="space-y-4 mb-6 px-2">
+        <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 px-2">
           {options.map((option) => {
             const isSelected = sex === option.value
             // Диагностика: проверка условия для каждой опции
@@ -150,11 +150,11 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
         </div>
         
         <div className="mt-auto pb-4">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

@@ -10,20 +10,20 @@ interface Step6MotivationProps {
 
 export default function Step6Motivation({ onNext }: Step6MotivationProps) {
   return (
-    <div className="flex flex-col h-full w-full py-8 px-4">
+    <div className="flex flex-col h-full w-full py-6 sm:py-8 px-3 sm:px-4">
       <div className="flex flex-col justify-start items-center" style={{ paddingTop: '29.76px' }}>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-4 text-center text-gray-800 px-2"
+          className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-3 sm:mb-4 text-center text-gray-800 px-2"
         >
           We&apos;ve helped thousands <br/>do it, you&apos;re next.
         </motion.h2>
         
-        <div className="relative w-full max-w-lg px-2 flex items-end gap-3 py-10">
+        <div className="relative w-full max-w-lg px-2 flex items-end gap-2 sm:gap-3 py-6 sm:py-10">
           {/* Circular reformly badge - avatar */}
-          <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-            <span className="text-white text-[9px] font-bold  whitespace-nowrap">reformly</span>
+          <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+            <span className="text-white text-[8px] sm:text-[9px] font-bold whitespace-nowrap">reformly</span>
           </div>
           
           {/* Message bubble with tail */}
@@ -32,7 +32,7 @@ export default function Step6Motivation({ onNext }: Step6MotivationProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="bg-primary-light rounded-3xl p-6 relative"
+              className="bg-primary-light rounded-3xl p-4 sm:p-6 relative"
             >
               <p className="text-gray-700 leading-relaxed mb-3">
                 You&apos;ve got enough to worry about, your fitness routine shouldn&apos;t be one of them.
@@ -48,11 +48,11 @@ export default function Step6Motivation({ onNext }: Step6MotivationProps) {
         </div>
         
         <div className="mt-4">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

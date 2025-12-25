@@ -31,9 +31,9 @@ export default function Step1Email({ onNext }: Step1EmailProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2">
           Log in to your Account or Create a new Account
         </h2>
         

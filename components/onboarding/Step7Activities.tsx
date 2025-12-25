@@ -11,11 +11,11 @@ interface Step7ActivitiesProps {
 }
 
 const activityOptions = [
-  { name: 'Pilates', icon: '/logos/pilates.png' },
-  { name: 'General Fitness', icon: '/logos/fitness.png' },
-  { name: 'Yoga', icon: '/logos/yoga.png' },
-  { name: 'Walking', icon: '/logos/walk.png' },
-  { name: 'Stretching', icon: '/logos/stretching.png' },
+  { name: 'Pilates', icon: '/logos/pilates.svg' },
+  { name: 'General Fitness', icon: '/logos/fitness.svg' },
+  { name: 'Yoga', icon: '/logos/yoga.svg' },
+  { name: 'Walking', icon: '/logos/walking.svg' },
+  { name: 'Stretching', icon: '/logos/stretching.svg' },
 ]
 
 export default function Step7Activities({ onNext }: Step7ActivitiesProps) {
@@ -35,9 +35,9 @@ export default function Step7Activities({ onNext }: Step7ActivitiesProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-4">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-4 sm:py-6">
       <div className="flex flex-col justify-start flex-1" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-7 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-5 sm:mb-7 text-center text-gray-800 px-2">
           Choose up to 3 activities you&apos;re interested in
         </h2>
         
@@ -134,12 +134,12 @@ export default function Step7Activities({ onNext }: Step7ActivitiesProps) {
           })}
         </div>
         
-        <div className="mt-auto pt-2 pb-6 flex-shrink-0">
-          <div className="flex justify-center px-4 mt-6">
+        <div className="mt-auto pt-2 pb-4 sm:pb-6 flex-shrink-0">
+          <div className="flex justify-center px-2 sm:px-4 mt-4 sm:mt-6">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

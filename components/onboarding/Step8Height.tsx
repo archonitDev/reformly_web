@@ -60,15 +60,15 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2">
           What&apos;s your height?
         </h2>
         
-        <div className="flex flex-col items-center mb-7">
+        <div className="flex flex-col items-center mb-5 sm:mb-7">
           {/* Input field container - widened and less tall */}
-          <div className="w-full max-w-lg bg-white rounded-2xl border-2 border-gray-200 px-8 py-4">
+          <div className="w-full max-w-lg bg-white rounded-2xl border-2 border-gray-200 px-4 sm:px-8 py-3 sm:py-4">
             {/* Unit selector */}
             <div className="flex justify-center gap-2 mb-5">
               <button
@@ -105,16 +105,16 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
                 value={value}
                 onChange={handleValueChange}
                 onBlur={handleBlur}
-                className="text-5xl font-bold text-gray-800 text-center w-64 h-14 border-b-2 border-gray-300 focus:border-primary focus:outline-none pb-1"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 text-center w-40 sm:w-56 md:w-64 h-12 sm:h-14 border-b-2 border-gray-300 focus:border-primary focus:outline-none pb-1"
                 placeholder={unit === 'cm' ? '173' : '68'}
-                style={{ minWidth: '14rem', maxWidth: '100%' }}
+                style={{ minWidth: '10rem', maxWidth: '100%' }}
               />
-              <span className="text-2xl font-semibold text-gray-800">{unit}</span>
+              <span className="text-xl sm:text-2xl font-semibold text-gray-800">{unit}</span>
             </div>
           </div>
         </div>
         {/* Information message - widened and less tall */}
-        <div className="bg-primary-light rounded-2xl px-8 py-3 max-w-lg mx-auto mb-3">
+        <div className="bg-primary-light rounded-2xl px-4 sm:px-8 py-3 max-w-lg mx-auto mb-3">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
               <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
@@ -134,11 +134,11 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
         
         
         <div className="mt-4">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

@@ -124,33 +124,33 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8 bg-transparent">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8 bg-transparent">
       <div className="flex flex-col justify-start" style={{ paddingTop: '0px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2">
           Your current BMI
         </h2>
         
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-6 sm:mb-8">
           {/* Large BMI number in circle */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-            className="relative w-32 h-32 mb-8 bg-primary-light rounded-full flex items-center justify-center"
+            className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-6 sm:mb-8 bg-primary-light rounded-full flex items-center justify-center"
           >
-            <div className="text-5xl font-bold text-primary">{bmiValue.toFixed(1)}</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary">{bmiValue.toFixed(1)}</div>
           </motion.div>
           
           {/* BMI Scale */}
-          <div className="w-full max-w-md mb-6" style={{ width: '110%', maxWidth: 'calc(550px * 1.1)' }}>
+          <div className="w-full mb-4 sm:mb-6 px-2 sm:px-4" style={{ maxWidth: '100%' }}>
             {/* Number markers - ABOVE the bar */}
-            <div className="relative mb-2 h-4">
+            <div className="relative mb-2 h-4 w-full">
               {markers.map((marker) => {
                 const position = ((marker - scaleMin) / (scaleMax - scaleMin)) * 100
                 return (
                   <div
                     key={marker}
-                    className="absolute text-xs text-gray-600"
+                    className="absolute text-[10px] sm:text-xs text-gray-600"
                     style={{
                       left: `${position}%`,
                       transform: 'translateX(-50%)',
@@ -164,9 +164,9 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
             </div>
             
             {/* Gradient bar */}
-            <div className="relative h-2 rounded-full mb-2" style={{ overflow: 'visible' }}>
+            <div className="relative h-2 rounded-full mb-2 w-full" style={{ overflow: 'visible' }}>
               <div 
-                className="absolute inset-0 rounded-full"
+                className="absolute inset-0 rounded-full w-full"
                 style={{
                   background: 'linear-gradient(to right, #EAE2FF 0%, #CAB7FA 20%, #5630B0 45%, #FBC7D4 60%, #F59E0B 75%, #EF4444 100%)',
                   overflow: 'hidden',
@@ -200,24 +200,24 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
             </div>
             
             {/* Category labels - BELOW the bar */}
-            <div className="flex justify-between text-xs mt-8 relative">
-              <span className={currentCategory?.label === 'Underweight' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+            <div className="flex justify-between text-[9px] sm:text-[10px] md:text-xs mt-6 sm:mt-8 relative w-full gap-0.5 sm:gap-1">
+              <span className={`${currentCategory?.label === 'Underweight' ? 'bg-primary-light text-primary font-semibold' : 'text-gray-600'} px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap`}>
                 Underweight
               </span>
-              <span className={currentCategory?.label === 'Normal' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+              <span className={`${currentCategory?.label === 'Normal' ? 'bg-primary-light text-primary font-semibold' : 'text-gray-600'} px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap`}>
                 Normal
               </span>
-              <span className={currentCategory?.label === 'Overweight' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+              <span className={`${currentCategory?.label === 'Overweight' ? 'bg-primary-light text-primary font-semibold' : 'text-gray-600'} px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap`}>
                 Overweight
               </span>
-              <span className={currentCategory?.label === 'Obese' ? 'bg-primary-light text-primary font-semibold px-3 py-1 rounded-full' : 'text-gray-600'}>
+              <span className={`${currentCategory?.label === 'Obese' ? 'bg-primary-light text-primary font-semibold' : 'text-gray-600'} px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap`}>
                 Obese
               </span>
             </div>
           </div>
           
           {/* Information message box */}
-          <div className="bg-primary-light rounded-2xl p-4 max-w-md mb-4" style={{ width: '110%', maxWidth: 'calc(550px * 1.1)' }}>
+          <div className="bg-primary-light rounded-2xl p-3 sm:p-4 max-w-md mb-4 w-full">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-bold">i</span>
@@ -230,11 +230,11 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
         </div>
         
         <div className="mt-2">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

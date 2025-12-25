@@ -60,15 +60,15 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2">
           What&apos;s your weight?
         </h2>
         
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-6 sm:mb-8">
           {/* Input field container */}
-          <div className="w-full max-w-md bg-white rounded-2xl border-2 border-gray-200 p-6">
+          <div className="w-full max-w-md bg-white rounded-2xl border-2 border-gray-200 p-4 sm:p-6">
             {/* Unit selector */}
             <div className="flex justify-center gap-2 mb-6">
               <button
@@ -105,20 +105,20 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
                 value={value}
                 onChange={handleValueChange}
                 onBlur={handleBlur}
-                className="text-6xl font-bold text-gray-800 text-center w-32 border-b-2 border-gray-300 focus:border-primary focus:outline-none pb-2"
+                className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800 text-center w-24 sm:w-28 md:w-32 border-b-2 border-gray-300 focus:border-primary focus:outline-none pb-2"
                 placeholder={unit === 'kg' ? '65' : '143'}
               />
-              <span className="text-3xl font-semibold text-gray-800">{unit}</span>
+              <span className="text-2xl sm:text-3xl font-semibold text-gray-800">{unit}</span>
             </div>
           </div>
         </div>
         
         <div className="mt-4">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

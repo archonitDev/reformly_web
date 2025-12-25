@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
 
@@ -98,12 +99,12 @@ export default function Step4Birthday({ onNext }: Step4BirthdayProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-2 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-2 text-center text-gray-800 px-2">
           When is your birthday?
         </h2>
-        <p className="text-sm text-gray-600 text-center mb-8">Date of birth</p>
+        <p className="text-xs sm:text-sm text-gray-600 text-center mb-6 sm:mb-8">Date of birth</p>
         
         <div className="flex flex-col items-center mb-8">
           {/* Date input field */}
@@ -132,30 +133,34 @@ export default function Step4Birthday({ onNext }: Step4BirthdayProps) {
         </div>
         
         {/* Information message */}
-        <div className="bg-primary-light rounded-2xl p-4 max-w-md mx-auto mb-4">
+        <div className="bg-primary-light rounded-2xl p-3 sm:p-4 max-w-md mx-auto mb-4">
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-              <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0">
+              <Image
+                src="/logos/stars.svg"
+                alt="Stars"
+                width={20}
+                height={20}
+              />
             </div>
-            <div>
+            <div className="flex flex-col">
               <p className="text-sm font-semibold text-primary mb-1">
                 Creating your personal plan
               </p>
-              <p className="text-sm text-gray-700">
-                People tend to have a higher body-fat percentage as they age, even at identical BMIs.
-              </p>
+              
             </div>
           </div>
+          <p className="text-sm text-gray-700 mt-0">
+                People tend to have a higher body-fat percentage as they age, even at identical BMIs.
+              </p>
         </div>
         
         <div className="mt-4">
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-2 sm:px-4">
             <div className="w-full max-w-md">
               <Button
                 variant="primary"
-                className="w-full py-2.5 text-base min-w-[300px]" 
+                className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
               >
                 Next

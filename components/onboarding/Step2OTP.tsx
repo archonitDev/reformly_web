@@ -78,13 +78,13 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
   }
   
   return (
-    <div className="flex flex-col h-full px-6 py-8">
+    <div className="flex flex-col h-full px-4 sm:px-6 py-6 sm:py-8">
       <div className="flex flex-col justify-start" style={{ paddingTop: '29.76px' }}>
-        <h2 className="font-plus-jakarta text-[40px] font-bold leading-[48px] mb-8 text-center text-gray-800">
+        <h2 className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2">
           Verification code
         </h2>
         
-        <div className="flex gap-3 justify-center mb-8">
+        <div className="flex gap-2 sm:gap-3 justify-center mb-6 sm:mb-8 px-2">
           {codes.map((code, index) => (
             <input
               key={index}
@@ -96,7 +96,7 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
               onChange={(e) => handleCodeChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-10 h-12 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-semibold rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               autoFocus={index === 0}
             />
           ))}
