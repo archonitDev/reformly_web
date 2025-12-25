@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
 
@@ -137,10 +138,12 @@ export default function Step11GoalWeight({ onNext }: Step11GoalWeightProps) {
         {/* Easy win information box */}
         <div className="bg-primary-light rounded-2xl p-3 sm:p-4 md:p-5 mx-auto mb-4 w-full max-w-md">
           <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center mt-0.5">
-              <img
+            <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center mt-0.5 relative">
+              <Image
                 src="/logos/stars.svg"
                 alt="star"
+                width={20}
+                height={20}
                 className="w-4 h-4 sm:w-5 sm:h-5 text-primary"
                 style={{ display: 'block' }}
               />

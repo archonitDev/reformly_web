@@ -608,7 +608,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
         {/* Results Section */}
         <div className="mb-6 sm:mb-8">
           <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-8 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16 px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-            Results we're proud of
+            Results we&apos;re proud of
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -638,7 +638,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 </div>
                 {/* Testimonial */}
                 <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                  Consistency came easy! You work out from home, just 20 minutes a day, and it's actually fun
+                  Consistency came easy! You work out from home, just 20 minutes a day, and it&apos;s actually fun
                 </p>
               </div>
             </div>
@@ -669,7 +669,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 </div>
                 {/* Testimonial */}
                 <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                  I went from 187 lbs, the heaviest I've ever been, to just over 145 lbs in only 60 days. Reformly gave me back my confidence
+                  I went from 187 lbs, the heaviest I&apos;ve ever been, to just over 145 lbs in only 60 days. Reformly gave me back my confidence
                 </p>
               </div>
             </div>
@@ -700,7 +700,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 </div>
                 {/* Testimonial */}
                 <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                  I'm almost 100 lbs down. Before starting this program, I didn't think I had the consistency in me to get this far.
+                  I&apos;m almost 100 lbs down. Before starting this program, I didn&apos;t think I had the consistency in me to get this far.
                 </p>
               </div>
             </div>
@@ -785,7 +785,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                   className="w-full flex items-center justify-between py-4 text-left"
                 >
                   <span className="font-bold text-gray-800 text-lg pr-4" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                    Is it okay that I'm a beginner?
+                    Is it okay that I&apos;m a beginner?
                   </span>
                   <motion.div
                     animate={{ rotate: openFaqs.has(1) ? 180 : 0 }}
@@ -874,7 +874,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                     className="overflow-hidden"
                   >
                     <p className="pb-4 text-gray-700 text-base leading-relaxed pl-0" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                      Once you complete your purchase, you'll receive an email with instructions to download the Reformly app. Simply sign in with your account credentials, and your personalized plan will be ready to use immediately. You can access your workouts, track your progress, and connect with the community all from the app on your phone or tablet.
+                      Once you complete your purchase, you&apos;ll receive an email with instructions to download the Reformly app. Simply sign in with your account credentials, and your personalized plan will be ready to use immediately. You can access your workouts, track your progress, and connect with the community all from the app on your phone or tablet.
                     </p>
                   </motion.div>
                 )}
@@ -903,7 +903,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 ))}
               </div>
               <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                This is the first workout plan I've actually stuck with. Even after a long day of work the 20 min sessions make it easy to stay consistent!
+                This is the first workout plan I&apos;ve actually stuck with. Even after a long day of work the 20 min sessions make it easy to stay consistent!
               </p>
             </div>
             
@@ -920,7 +920,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 ))}
               </div>
               <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                Best purchase I've made all year. I wasted so much money on gym memberships I never used.
+                Best purchase I&apos;ve made all year. I wasted so much money on gym memberships I never used.
               </p>
             </div>
             
@@ -937,7 +937,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                 ))}
               </div>
               <p className="text-gray-700 text-base leading-relaxed" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                After pregnancy, I didn't feel like myself anymore. Reformly is so easy to fit in my routine, the program helped me feel confident again.
+                After pregnancy, I didn&apos;t feel like myself anymore. Reformly is so easy to fit in my routine, the program helped me feel confident again.
               </p>
             </div>
           </div>
@@ -1118,7 +1118,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
             
             {/* Body Text */}
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 max-w-2xl mx-auto px-2" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-              We believe that our plan may work for you and you'll get visible results in 4 weeks! We even are ready to return your money back if you don't see visible results and can demonstrate that you followed our plan.
+              We believe that our plan may work for you and you&apos;ll get visible results in 4 weeks! We even are ready to return your money back if you don&apos;t see visible results and can demonstrate that you followed our plan.
             </p>
             
             {/* Link */}
