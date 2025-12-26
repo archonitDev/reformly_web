@@ -60,8 +60,8 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   const titleRef = useRef<HTMLHeadingElement>(null)
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set([0])) // First FAQ open by default
   
-  // Get username from profile or use default
-  const username = profile.username || 'Mex'
+  // Get name from profile (from /auth/me) or use default
+  const name = profile.name || profile.username || 'Mex'
   
   const mainGoal = aboutYou.mainGoal ? goalsMap[aboutYou.mainGoal] || aboutYou.mainGoal : 'Lose weight'
   const activities = aboutYou.activities || []
@@ -79,7 +79,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
     window.addEventListener('resize', updateTitleWidth)
     
     return () => window.removeEventListener('resize', updateTitleWidth)
-  }, [username])
+  }, [name])
   
   // X-axis labels for the 4 gradations
   const xAxisLabels = [
@@ -131,7 +131,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
             ref={titleRef}
             className="font-plus-jakarta text-2xl sm:text-3xl md:text-[40px] font-bold leading-tight sm:leading-[48px] mb-6 sm:mb-8 text-center text-gray-800 px-2"
           >
-            {username}, your personalized plan is ready!
+            {name}, your personalized plan is ready!
           </h2>
           
           {/* Plan Summary Section - matches title width */}

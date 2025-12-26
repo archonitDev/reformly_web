@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
-import { verifyEmailOtp } from '@/lib/api'
+import { verifyEmailOtp, getAuthMe, sendEmailOtp } from '@/lib/api'
+import { ensureFirebaseUser } from '@/lib/firebase'
 
 interface Step2OTPProps {
   onNext: () => void
@@ -13,9 +14,10 @@ interface Step2OTPProps {
 export default function Step2OTP({ onNext }: Step2OTPProps) {
   const [codes, setCodes] = useState(['', '', '', '', '', ''])
   const [isLoading, setIsLoading] = useState(false)
-  const [resendTimer, setResendTimer] = useState(97) // 1:37 in seconds
+  const [resendTimer, setResendTimer] = useState(90) // 90 seconds = 1:30
+  const [error, setError] = useState<string | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const { auth, setAuth } = useOnboardingStore()
+  const { auth, setAuth, setProfile } = useOnboardingStore()
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,15 +59,52 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
     const code = codes.join('')
     if (code.length !== 6) return
     
+    setError(null)
     setIsLoading(true)
     try {
       const result = await verifyEmailOtp(auth.email, code)
-      if (result.ok) {
+      if (result.ok && result.data) {
+        // Mark as verified
         setAuth({ isVerified: true })
+        
+        // Fetch user data from /auth/me
+        const meResult = await getAuthMe()
+        if (meResult.ok && meResult.data) {
+          setProfile({
+            username: meResult.data.username || '',
+            bio: meResult.data.bio || '',
+            name: meResult.data.name || '',
+          })
+        }
+        
         onNext()
+      } else {
+        setError(result.error || 'Invalid verification code')
       }
     } catch (error) {
       console.error('Failed to verify OTP:', error)
+      setError('Failed to verify code. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  const handleResend = async () => {
+    if (resendTimer > 0) return
+    
+    setError(null)
+    setIsLoading(true)
+    try {
+      await ensureFirebaseUser()
+      const result = await sendEmailOtp(auth.email)
+      if (result.ok) {
+        setResendTimer(90) // Reset timer to 90 seconds
+      } else {
+        setError(result.error || 'Failed to resend code')
+      }
+    } catch (error) {
+      console.error('Failed to resend OTP:', error)
+      setError('Failed to resend code. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -107,16 +146,18 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
             <span>Resend Code in {formatTimer(resendTimer)}</span>
           ) : (
             <button
-              className="text-primary font-medium hover:underline"
-              onClick={() => {
-                setResendTimer(97)
-                // Mock resend
-              }}
+              className="text-primary font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleResend}
+              disabled={isLoading}
             >
               Resend Code
             </button>
           )}
         </div>
+        
+        {error && (
+          <p className="text-xs text-red-500 mb-4 text-center">{error}</p>
+        )}
         
         <div className="mt-4">
           <Button

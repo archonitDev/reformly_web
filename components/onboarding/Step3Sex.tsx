@@ -156,6 +156,7 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
                 variant="primary"
                 className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
+                disabled={!sex}
               >
                 Next
               </Button>

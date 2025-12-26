@@ -162,6 +162,7 @@ export default function Step4Birthday({ onNext }: Step4BirthdayProps) {
                 variant="primary"
                 className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
+                disabled={!aboutYou.birthday || !!error}
               >
                 Next
               </Button>

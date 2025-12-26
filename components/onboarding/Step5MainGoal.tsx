@@ -155,6 +155,7 @@ export default function Step5MainGoal({ onNext }: Step5MainGoalProps) {
                 variant="primary"
                 className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
+                disabled={!mainGoal}
               >
                 Next
               </Button>

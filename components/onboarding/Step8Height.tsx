@@ -140,6 +140,7 @@ export default function Step8Height({ onNext }: Step8HeightProps) {
                 variant="primary"
                 className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
+                disabled={!metrics.height.value || metrics.height.value <= 0}
               >
                 Next
               </Button>

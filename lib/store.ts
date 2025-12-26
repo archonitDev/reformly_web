@@ -61,6 +61,7 @@ export interface OnboardingState {
   profile: {
     username: string
     bio: string
+    name: string
   }
   
   // Actions
@@ -123,6 +124,7 @@ const initialState = {
   profile: {
     username: '',
     bio: '',
+    name: '',
   },
 }
 

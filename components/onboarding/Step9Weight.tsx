@@ -120,6 +120,7 @@ export default function Step9Weight({ onNext }: Step9WeightProps) {
                 variant="primary"
                 className="w-full py-2.5 text-sm sm:text-base md:min-w-[300px]" 
                 onClick={onNext}
+                disabled={!metrics.currentWeight?.value || metrics.currentWeight.value <= 0}
               >
                 Next
               </Button>

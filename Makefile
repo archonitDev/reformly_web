@@ -1,4 +1,4 @@
-.PHONY: help up down clean logs build rebuild ps restart force-reload shell up-prod down-prod up-prod-local down-prod-local check-prod check-files verify-sync
+.PHONY: help up down clean logs build rebuild ps restart force-reload shell exec check-env up-prod down-prod up-prod-local down-prod-local check-prod check-files verify-sync
 
 # Default target
 help:
@@ -15,7 +15,9 @@ help:
 	@echo "  make ps          - Show running containers"
 	@echo "  make restart     - Restart containers"
 	@echo "  make force-reload - Clear Next.js cache and restart (for hot reload issues)"
-	@echo "  make shell       - Open shell in container"
+	@echo "  make shell       - Open shell in container (docker exec)"
+	@echo "  make exec        - Open shell in container (docker compose exec web)"
+	@echo "  make check-env   - Check environment variables in container"
 	@echo "  make check-files - Check if files are synced in container"
 	@echo "  make verify-sync - Compare local and container file contents"
 
@@ -67,6 +69,20 @@ ps:
 
 shell:
 	docker exec -it reformly-web sh
+
+exec:
+	docker compose exec web sh
+
+check-env:
+	@echo "=== Environment variables in container ==="
+	@echo "Checking NEXT_PUBLIC_ variables:"
+	@docker compose exec web sh -c 'env | grep NEXT_PUBLIC_ || echo "No NEXT_PUBLIC_ variables found"'
+	@echo ""
+	@echo "Checking .env file:"
+	@docker compose exec web sh -c 'cat .env 2>/dev/null || echo ".env file not found"'
+	@echo ""
+	@echo "Checking .env.local file:"
+	@docker compose exec web sh -c 'cat .env.local 2>/dev/null || echo ".env.local file not found"'
 
 check-files:
 	@echo "=== Checking file in container ==="

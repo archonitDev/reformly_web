@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useOnboardingStore } from '@/lib/store'
+import { submitOnboarding } from '@/lib/api'
 
 interface Step14CraftingProps {
   onNext: () => void
@@ -15,10 +17,49 @@ const steps = [
   'Choosing the best workouts for you',
 ]
 
+// Map gender values
+const mapGender = (sex: string | null): string | null => {
+  if (!sex) return null
+  const mapping: Record<string, string> = {
+    'male': 'MALE',
+    'female': 'FEMALE',
+    'other': 'OTHER',
+  }
+  return mapping[sex] || null
+}
+
+// Map main goal values
+const mapMainGoal = (goal: string | null): string | null => {
+  if (!goal) return null
+  const mapping: Record<string, string> = {
+    'lose-weight': 'LOSE_WEIGHT',
+    'find-self-love': 'FIND_SELF_LOVE',
+    'build-muscle': 'BUILD_MUSCLE',
+    'keep-fit': 'KEEP_FIT',
+  }
+  return mapping[goal] || goal.toUpperCase().replace(/-/g, '_')
+}
+
+// Map activities
+const mapActivities = (activities: string[]): string[] => {
+  return activities.map(activity => {
+    const mapping: Record<string, string> = {
+      'Pilates': 'PILATES',
+      'General Fitness': 'GENERAL_FITNESS',
+      'Yoga': 'YOGA',
+      'Walking': 'WALKING',
+      'Stretching': 'STRETCHING',
+    }
+    return mapping[activity] || activity.toUpperCase().replace(/\s+/g, '_')
+  })
+}
+
 export default function Step14Crafting({ onNext }: Step14CraftingProps) {
   const [progress, setProgress] = useState(11)
   const [currentStep, setCurrentStep] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { aboutYou, metrics, profile } = useOnboardingStore()
   
   useEffect(() => {
     if (isComplete) return
@@ -56,13 +97,87 @@ export default function Step14Crafting({ onNext }: Step14CraftingProps) {
   
   // Auto-advance to next step when complete
   useEffect(() => {
-    if (isComplete) {
-      const timer = setTimeout(() => {
-        onNext()
-      }, 500) // Small delay for smooth transition
-      return () => clearTimeout(timer)
+    if (isComplete && !isSubmitting) {
+      const submitData = async () => {
+        setIsSubmitting(true)
+        
+        try {
+          // Log raw data from store
+          console.log('[Step14Crafting] Raw store data:', {
+            aboutYou,
+            metrics,
+            profile,
+          })
+          
+          // Format date of birth
+          const dateOfBirth = aboutYou.birthday
+            ? aboutYou.birthday.toISOString().split('T')[0]
+            : null
+          
+          // Build payload
+          const payload: any = {
+            heightUnit: metrics.height.unit === 'cm' ? 'CM' : 'IN',
+            weightUnit: metrics.currentWeight?.unit === 'kg' ? 'KG' : 'LB',
+            gender: mapGender(aboutYou.sex),
+            dateOfBirth,
+            mainGoal: mapMainGoal(aboutYou.mainGoal),
+            activities: mapActivities(aboutYou.activities),
+            height: metrics.height.value,
+            currentWeight: metrics.currentWeight?.value,
+            goalWeight: metrics.goalWeight.value,
+            // Ensure username and bio are strings (empty string if null/undefined)
+            username: profile.username || '',
+            bio: profile.bio || '',
+          }
+          
+          console.log('[Step14Crafting] Payload before cleanup:', JSON.stringify(payload, null, 2))
+          
+          // Remove null/undefined values (except username and bio which are always strings)
+          Object.keys(payload).forEach(key => {
+            if (key !== 'username' && key !== 'bio' && (payload[key] === null || payload[key] === undefined)) {
+              delete payload[key]
+            }
+          })
+          
+          console.log('[Step14Crafting] Payload after cleanup:', JSON.stringify(payload, null, 2))
+          console.log('[Step14Crafting] Sending finish-onboarding request...')
+          
+          const result = await submitOnboarding(payload)
+          
+          if (result.ok) {
+            console.log('[Step14Crafting] ✅ Onboarding submitted successfully')
+            // Small delay for smooth transition
+            setTimeout(() => {
+              onNext()
+            }, 500)
+          } else {
+            console.error('[Step14Crafting] ❌ Failed to submit onboarding:', result.error)
+            console.error('[Step14Crafting] Full error response:', result)
+            // Still proceed to next step even if submission fails
+            // (to avoid blocking user flow)
+            setTimeout(() => {
+              onNext()
+            }, 500)
+          }
+        } catch (error: any) {
+          console.error('[Step14Crafting] ❌ Exception submitting onboarding:', error)
+          console.error('[Step14Crafting] Error details:', {
+            message: error?.message,
+            status: error?.status,
+            stack: error?.stack,
+          })
+          // Still proceed to next step even if submission fails
+          setTimeout(() => {
+            onNext()
+          }, 500)
+        } finally {
+          setIsSubmitting(false)
+        }
+      }
+      
+      submitData()
     }
-  }, [isComplete, onNext])
+  }, [isComplete, isSubmitting, aboutYou, metrics, profile, onNext])
   
   // Use fixed radius for calculations, SVG will scale via viewBox
   const radius = 40
