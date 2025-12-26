@@ -8,6 +8,8 @@ services:
       - NODE_ENV=production
       - HOSTNAME=0.0.0.0
       - PORT=3000
+    env_file:
+      - .env
     restart: unless-stopped
     labels:
       # Traefik labels for automatic service discovery
