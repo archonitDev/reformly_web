@@ -98,6 +98,19 @@ verify-sync:
 
 # Production commands
 up-prod:
+	@echo "=== Checking required environment variables ==="
+	@test -f .env || (echo "ERROR: .env file not found!" && exit 1)
+	@echo "✓ .env file exists"
+	@echo ""
+	@echo "Required variables (from .env):"
+	@grep -q "NEXT_PUBLIC_API_BASE_URL\|API_BASE_URL" .env && echo "✓ API_BASE_URL found" || echo "⚠ API_BASE_URL not found"
+	@grep -q "NEXT_PUBLIC_FIREBASE_API_KEY" .env && echo "✓ NEXT_PUBLIC_FIREBASE_API_KEY found" || echo "⚠ NEXT_PUBLIC_FIREBASE_API_KEY not found"
+	@grep -q "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" .env && echo "✓ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN found" || echo "⚠ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN not found"
+	@grep -q "NEXT_PUBLIC_FIREBASE_PROJECT_ID" .env && echo "✓ NEXT_PUBLIC_FIREBASE_PROJECT_ID found" || echo "⚠ NEXT_PUBLIC_FIREBASE_PROJECT_ID not found"
+	@grep -q "NEXT_PUBLIC_STORAGE_BUCKET" .env && echo "✓ NEXT_PUBLIC_STORAGE_BUCKET found" || echo "⚠ NEXT_PUBLIC_STORAGE_BUCKET not found"
+	@grep -q "NEXT_PUBLIC_MESSAGING_SENDER_ID" .env && echo "✓ NEXT_PUBLIC_MESSAGING_SENDER_ID found" || echo "⚠ NEXT_PUBLIC_MESSAGING_SENDER_ID not found"
+	@grep -q "NEXT_PUBLIC_APP_ID" .env && echo "✓ NEXT_PUBLIC_APP_ID found" || echo "⚠ NEXT_PUBLIC_APP_ID not found"
+	@echo ""
 	docker compose -f docker-compose.prod.yml down || true
 	docker rm -f reformly-web || true
 	docker compose -f docker-compose.prod.yml up --build -d
