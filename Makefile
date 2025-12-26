@@ -1,4 +1,4 @@
-.PHONY: help up down clean logs build rebuild ps restart force-reload shell exec check-env up-prod down-prod up-prod-local down-prod-local check-prod check-files verify-sync
+.PHONY: help up down clean logs build rebuild ps restart force-reload shell exec check-env up-prod down-prod up-prod-local down-prod-local logs-prod ps-prod exec-prod check-prod-status check-prod check-files verify-sync
 
 # Default target
 help:
@@ -8,6 +8,10 @@ help:
 	@echo "  make up-prod-local - Build and start production containers locally (with port 3000)"
 	@echo "  make down        - Stop and remove containers"
 	@echo "  make down-prod   - Stop and remove production containers"
+	@echo "  make logs-prod   - View production container logs"
+	@echo "  make ps-prod     - Show production container status"
+	@echo "  make exec-prod   - Open shell in production container"
+	@echo "  make check-prod-status - Check production container health"
 	@echo "  make clean       - Full cleanup: stop containers, remove volumes, images, and clear Next.js cache"
 	@echo "  make logs        - View container logs"
 	@echo "  make build       - Build image"
@@ -117,6 +121,25 @@ up-prod:
 
 down-prod:
 	docker compose -f docker-compose.prod.yml down
+
+logs-prod:
+	docker compose -f docker-compose.prod.yml logs -f web
+
+ps-prod:
+	docker compose -f docker-compose.prod.yml ps
+
+exec-prod:
+	docker compose -f docker-compose.prod.yml exec web sh
+
+check-prod-status:
+	@echo "=== Production Container Status ==="
+	@docker compose -f docker-compose.prod.yml ps
+	@echo ""
+	@echo "=== Container Logs (last 50 lines) ==="
+	@docker compose -f docker-compose.prod.yml logs --tail=50 web || echo "No logs available"
+	@echo ""
+	@echo "=== Testing container from inside ==="
+	@docker compose -f docker-compose.prod.yml exec web wget -qO- http://localhost:3000 2>/dev/null | head -c 200 || echo "Container not responding"
 
 # Production local testing commands
 up-prod-local:
