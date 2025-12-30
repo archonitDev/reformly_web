@@ -81,7 +81,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set([0])) // First FAQ open by default
   
   // Get name from profile (from /auth/me) or use default
-  const name = profile.name || profile.username || 'Mex'
+  const name = profile.name || profile.username || 'Hello'
   
   const mainGoal = aboutYou.mainGoal ? goalsMap[aboutYou.mainGoal] || aboutYou.mainGoal : 'Lose weight'
   const activities = aboutYou.activities || []

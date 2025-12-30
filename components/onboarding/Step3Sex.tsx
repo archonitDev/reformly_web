@@ -21,7 +21,7 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
   const sex = useOnboardingStore(s => s.aboutYou.sex)
   const setAboutYou = useOnboardingStore(s => s.setAboutYou)
   
-  // Диагностика: отслеживание изменений sex
+  // Debug: track sex changes
   useEffect(() => {
     console.log('render sex', sex)
   }, [sex])
@@ -29,7 +29,7 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
   const handleSelect = (value: string) => {
     console.log('clicked', value)
     setAboutYou({ sex: value as 'male' | 'female' | 'other' })
-    // Диагностика: проверка значения после обновления
+    // Debug: check value after update
     const storeSex = useOnboardingStore.getState().aboutYou.sex
     console.log('store sex after', storeSex)
   }
@@ -48,7 +48,7 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
         <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 px-2">
           {options.map((option) => {
             const isSelected = sex === option.value
-            // Диагностика: проверка условия для каждой опции
+            // Debug: check condition for each option
             if (isSelected) {
               console.log(`Option ${option.value} is selected, sex=${sex}`)
             }

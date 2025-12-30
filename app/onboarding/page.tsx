@@ -1,14 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useOnboardingStore } from '@/lib/store'
 import OnboardingWizard from '@/components/OnboardingWizard'
 
 const TOTAL_STEPS = 15
 
-export default function OnboardingPage() {
+function OnboardingContent() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const { getAllData, auth } = useOnboardingStore()
+  
+  // Handle step query parameter (e.g., ?step=15 to go directly to step 15)
+  useEffect(() => {
+    const stepParam = searchParams.get('step')
+    if (stepParam) {
+      const step = parseInt(stepParam, 10)
+      if (!isNaN(step) && step >= 0 && step < TOTAL_STEPS) {
+        setCurrentStep(step)
+      }
+    }
+  }, [searchParams])
   
   // Guard: redirect to email step if trying to access protected steps without verification
   useEffect(() => {
@@ -64,5 +77,17 @@ export default function OnboardingPage() {
         onBack={handleBack}
       />
     </div>
+  )
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    }>
+      <OnboardingContent />
+    </Suspense>
   )
 }

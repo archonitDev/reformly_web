@@ -50,7 +50,7 @@ export default function Step12RatingModal({ onNext }: Step12RatingModalProps) {
   // Convert current weight to same unit as goal weight if needed
   const currentWeightDisplay = useMemo(() => {
     if (!metrics.currentWeight?.value) {
-      // Если нет текущего веса, используем goalWeight + 10% как пример
+      // If no current weight, use goalWeight + 10% as example
       return goalWeight * 1.1
     }
     if (metrics.currentWeight.unit === metrics.goalWeight?.unit) {
@@ -75,7 +75,7 @@ export default function Step12RatingModal({ onNext }: Step12RatingModalProps) {
           We&apos;ll create a plan to help you reach your goal of:
         </p>
 
-        {/* Goal weight pill - над графиком */}
+        {/* Goal weight pill - above the graph */}
         <div className="flex justify-center mb-4 sm:mb-6 px-2">
           <div className="bg-primary-light rounded-full px-4 sm:px-6 py-1.5 sm:py-2 inline-block">
             <span className="text-primary font-semibold text-sm sm:text-base md:text-lg">
@@ -109,7 +109,7 @@ export default function Step12RatingModal({ onNext }: Step12RatingModalProps) {
             />
           </div>
           
-          {/* Left weight label - цифра веса в розовой овальной форме (левая точка графика) */}
+          {/* Left weight label - weight number in pink oval shape (left point of the graph) */}
           <div
             className="absolute bg-pink-accent rounded-lg px-3 py-1.5 text-center z-10"
             style={{
@@ -123,7 +123,7 @@ export default function Step12RatingModal({ onNext }: Step12RatingModalProps) {
             </span>
           </div>
           
-          {/* Right check mark - лого галочки в фиолетовом круге (конечная точка графика) */}
+          {/* Right check mark - checkmark logo in purple circle (end point of the graph) */}
           <div
             className="absolute z-10 flex items-center justify-center"
             style={{
@@ -142,7 +142,7 @@ export default function Step12RatingModal({ onNext }: Step12RatingModalProps) {
           </div>
         </div>
 
-        {/* Date labels - три градации под графиком, выровненные точно под графиком */}
+        {/* Date labels - three gradations under the graph, aligned exactly under the graph */}
         <div className="relative mb-3 sm:mb-4 mx-auto px-2" style={{ width: '100%', maxWidth: '287px', height: '24px', marginTop: '12px' }}>
           <div className="absolute font-plus-jakarta text-sm sm:text-base font-bold text-gray-600" style={{ left: '13px', top: '0', transform: 'translateX(-50%)', lineHeight: '24px', height: '24px' }}>
             {dates.today}
