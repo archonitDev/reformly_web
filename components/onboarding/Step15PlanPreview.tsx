@@ -61,7 +61,7 @@ const mapPlanToDisplay = (plan: SubscriptionPlan, index: number) => {
 }
 
 export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewProps) {
-  const { aboutYou, subscription, setSubscription, profile } = useOnboardingStore()
+  const { aboutYou, subscription, setSubscription, profile, metrics } = useOnboardingStore()
   const [plans, setPlans] = useState<Array<{
     id: string
     title: string
@@ -83,9 +83,43 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   // Get name from profile (from /auth/me) or use default
   const name = profile.name || profile.username || 'Hello'
   
-  const mainGoal = aboutYou.mainGoal ? goalsMap[aboutYou.mainGoal] || aboutYou.mainGoal : 'Lose weight'
+  // Calculate dynamic goal based on current weight vs goal weight
+  const calculateGoal = (): string => {
+    const currentWeight = metrics.currentWeight?.value
+    const goalWeight = metrics.goalWeight?.value
+    
+    if (!currentWeight || !goalWeight) {
+      // Fallback to mainGoal if weights are not available
+      return aboutYou.mainGoal ? goalsMap[aboutYou.mainGoal] || aboutYou.mainGoal : 'Lose weight'
+    }
+    
+    // Convert both to kg for comparison
+    let currentWeightInKg = currentWeight
+    if (metrics.currentWeight?.unit === 'lb') {
+      currentWeightInKg = currentWeight * 0.453592
+    }
+    
+    let goalWeightInKg = goalWeight
+    if (metrics.goalWeight?.unit === 'lb') {
+      goalWeightInKg = goalWeight * 0.453592
+    }
+    
+    // Determine goal based on comparison
+    if (currentWeightInKg > goalWeightInKg) {
+      return 'Lose weight'
+    } else if (currentWeightInKg < goalWeightInKg) {
+      return 'Gain weight'
+    } else {
+      return 'Consistency'
+    }
+  }
+  
+  const mainGoal = calculateGoal()
   const activities = aboutYou.activities || []
   const displayActivities = activities.slice(0, 2) // Take first 2 activities
+  
+  // Determine which graph to display based on goal
+  const graphSrc = mainGoal === 'Lose weight' ? '/logos/graph_down.svg' : '/logos/graph_up.svg'
   
   // Load subscription plans on mount
   useEffect(() => {
@@ -148,8 +182,8 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
   ]
   
   // Graph SVG dimensions
-  const graphWidth = 287
-  const graphHeight = 127
+  const graphWidth = 327
+  const graphHeight = 157
   const graphStartX = 6.5 // Starting point X coordinate (left circle position)
   const graphStartY = 113.5 // Starting point Y coordinate (left circle position)
   
@@ -229,53 +263,17 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                   {/* Graph SVG */}
                 <div className="relative w-full" style={{ maxWidth: `${graphWidth}px`, aspectRatio: `${graphWidth}/${graphHeight}` }}>
                   <Image
-                    src="/logos/graph.svg"
+                    src={graphSrc}
                     alt="Progress Graph"
                     width={graphWidth}
                     height={graphHeight}
                     className="object-contain w-full h-full"
                   />
                   
-                  {/* "New" label above the starting point */}
-                  <div
-                    className="absolute text-xs text-gray-600 font-medium"
-                    style={{
-                      left: `${graphStartX}px`,
-                      top: `${graphStartY - 25}px`,
-                      transform: 'translateX(-50%)',
-                      fontFamily: 'var(--font-plus-jakarta-sans)',
-                      fontSize: '12px',
-                      fontWeight: 500,
-                    }}
-                  ><strong>Now</strong>
-                  </div>
                 </div>
                 
                 {/* Week gradation below the graph */}
-                <div className="relative mt-4 w-full" style={{ maxWidth: `${graphWidth}px`, height: '20px' }}>
-                  {xAxisLabels.map((label, index) => {
-                    // Calculate x position for each week label
-                    // Week 1 at start (0%), Week 4 at 33%, Week 8 at 66%, Week 12 at end (100%)
-                    const positions = [0, 0.33, 0.66, 1]
-                    const x = positions[index] * graphWidth
-                    
-                    return (
-                      <div
-                        key={index}
-                        className="absolute text-xs text-gray-600 font-medium whitespace-nowrap"
-                        style={{
-                          left: `${x}px`,
-                          transform: 'translateX(-50%)',
-                          fontFamily: 'var(--font-plus-jakarta-sans)',
-                          fontSize: '12px',
-                          fontWeight: 500,
-                        }}
-                      >
-                        {label.label}
-                      </div>
-                    )
-                  })}
-                </div>
+                
                 </div>
               </div>
             </div>

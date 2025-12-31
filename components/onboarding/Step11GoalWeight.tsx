@@ -15,26 +15,60 @@ export default function Step11GoalWeight({ onNext }: Step11GoalWeightProps) {
   const [value, setValue] = useState<string>(String(metrics.goalWeight.value || 65))
   const [unit, setUnit] = useState<'kg' | 'lbs'>(metrics.goalWeight.unit === 'lb' ? 'lbs' : (metrics.goalWeight.unit === 'kg' ? 'kg' : 'kg'))
   
-  // Calculate 10% weight loss
-  const calculateWeightLoss = () => {
-    if (!metrics.currentWeight?.value) return null
+  // Calculate weight difference and percentage
+  const calculateWeightInfo = () => {
+    if (!metrics.currentWeight?.value || !value) return null
     
     const currentWeight = metrics.currentWeight.value
     const currentUnit = metrics.currentWeight.unit
+    const goalWeight = parseFloat(value) || 0
     
-    // Convert to same unit as displayed
-    let weightInDisplayUnit = currentWeight
-    if (currentUnit === 'lb' && unit === 'kg') {
-      weightInDisplayUnit = currentWeight * 0.453592
-    } else if (currentUnit === 'kg' && unit === 'lbs') {
-      weightInDisplayUnit = currentWeight * 2.20462
+    // Convert both to same unit (kg) for calculation
+    let currentWeightInKg = currentWeight
+    if (currentUnit === 'lb') {
+      currentWeightInKg = currentWeight * 0.453592
     }
     
-    const weightLoss = weightInDisplayUnit * 0.1
-    return Math.round(weightLoss * 10) / 10
+    let goalWeightInKg = goalWeight
+    if (unit === 'lbs') {
+      goalWeightInKg = goalWeight * 0.453592
+    }
+    
+    // Calculate difference and percentage
+    const weightDifference = Math.abs(currentWeightInKg - goalWeightInKg)
+    const percentageDifference = currentWeightInKg > 0 
+      ? (weightDifference / currentWeightInKg) * 100 
+      : 0
+    
+    // Determine message type
+    let messageType: 'easy-win' | 'steady-progress' | 'strong-transformation' | 'healthy-strength' = 'easy-win'
+    
+    if (goalWeightInKg < currentWeightInKg) {
+      // Weight loss
+      if (percentageDifference <= 10) {
+        messageType = 'easy-win'
+      } else if (percentageDifference <= 20) {
+        messageType = 'steady-progress'
+      } else {
+        messageType = 'strong-transformation'
+      }
+    } else if (goalWeightInKg > currentWeightInKg) {
+      // Weight gain
+      messageType = 'healthy-strength'
+    } else {
+      // Same weight
+      messageType = 'easy-win'
+    }
+    
+    return {
+      percentageDifference: Math.round(percentageDifference * 10) / 10,
+      messageType,
+      isWeightLoss: goalWeightInKg < currentWeightInKg,
+      isWeightGain: goalWeightInKg > currentWeightInKg,
+    }
   }
   
-  const weightLoss = calculateWeightLoss()
+  const weightInfo = calculateWeightInfo()
   
   useEffect(() => {
     const numValue = parseFloat(value) || 0
@@ -135,43 +169,104 @@ export default function Step11GoalWeight({ onNext }: Step11GoalWeightProps) {
           </div>
         </div>
         
-        {/* Easy win information box */}
-        <div className="bg-primary-light rounded-2xl p-3 sm:p-4 md:p-5 mx-auto mb-4 w-full max-w-md">
-          <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center mt-0.5 relative">
-              <Image
-                src="/logos/stars.svg"
-                alt="star"
-                width={20}
-                height={20}
-                className="w-4 h-4 sm:w-5 sm:h-5 text-primary"
-                style={{ display: 'block' }}
-              />
+        {/* Dynamic information box */}
+        {weightInfo && (
+          <div className="bg-primary-light rounded-2xl p-3 sm:p-4 md:p-5 mx-auto mb-4 w-full max-w-md">
+            <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center mt-0.5 relative">
+                <Image
+                  src="/logos/stars.svg"
+                  alt="star"
+                  width={20}
+                  height={20}
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-primary"
+                  style={{ display: 'block' }}
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-0 flex items-center gap-1">
+                  <span>
+                    {weightInfo.messageType === 'easy-win' && 'Easy win'}
+                    {weightInfo.messageType === 'steady-progress' && 'Steady progress'}
+                    {weightInfo.messageType === 'strong-transformation' && 'Strong transformation'}
+                    {weightInfo.messageType === 'healthy-strength' && 'Healthy strength boost'}
+                  </span>
+                </h3>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-sm sm:text-base font-bold text-primary mb-0 flex items-center gap-1">
-                <span>Easy win</span>
-              </h3>
+            <div className="text-xs sm:text-sm text-gray-800 font-bold mb-1 sm:mb-2">
+              {weightInfo.isWeightLoss && `You will lose ${weightInfo.percentageDifference}% of your weight`}
+              {weightInfo.isWeightGain && `You will gain ${weightInfo.percentageDifference}% of your weight`}
+              {!weightInfo.isWeightLoss && !weightInfo.isWeightGain && `You will maintain your weight`}
             </div>
+            <ul className="text-xs sm:text-sm text-gray-700 mt-1 space-y-1">
+              {weightInfo.messageType === 'easy-win' && (
+                <>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Moderate weight loss already brings big changes.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Slimmer waist, toned muscles</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>A boost of body confidence</span>
+                  </li>
+                </>
+              )}
+              {weightInfo.messageType === 'steady-progress' && (
+                <>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>A realistic and healthy target</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>More definition</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Better daily energy</span>
+                  </li>
+                </>
+              )}
+              {weightInfo.messageType === 'strong-transformation' && (
+                <>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>You&apos;re aiming for meaningful progress</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Better mobility</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Noticeable shape change</span>
+                  </li>
+                </>
+              )}
+              {weightInfo.messageType === 'healthy-strength' && (
+                <>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>A balanced plan to help you build strength and stability.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Stronger muscles</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span>Improved balance & posture</span>
+                  </li>
+                </>
+              )}
+            </ul>
           </div>
-          <div className="text-xs sm:text-sm text-gray-800 font-bold mb-1 sm:mb-2">
-            You will lose 10% of your weight
-          </div>
-          <ul className="text-xs sm:text-sm text-gray-700 mt-1 space-y-1">
-            <li className="flex items-start">
-              <span className="mr-2 flex-shrink-0">•</span>
-              <span>Moderate weight loss already brings big changes.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 flex-shrink-0">•</span>
-              <span>Slimmer waist, toned muscles</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 flex-shrink-0">•</span>
-              <span>A boost of body confidence</span>
-            </li>
-          </ul>
-        </div>
+        )}
         
         <div className="mt-4">
           <div className="flex justify-center px-2 sm:px-4">

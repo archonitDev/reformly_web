@@ -111,13 +111,13 @@ export default function Step10BMI({ onNext }: Step10BMIProps) {
   const getCategoryMessage = () => {
     switch (category) {
       case 'underweight':
-        return "You're below the normal range. We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
+        return " You're lighter than average for your height. We'll help you build strength safely and support your body with balanced, feel-good movement."
       case 'normal':
-        return "You're in great shape! We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
+        return " You're in great shape! We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
       case 'overweight':
-        return "You're above the normal range. We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
+        return "You're on the right track, with small daily habits and guided Reformly workouts, you'll feel lighter, stronger, and more confident step by step."
       case 'obese':
-        return "You're in the obese range. We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
+        return "No stress, we'll build a, personalized plan to support weight loss, improve mobility, and help you regain confidence."
       default:
         return "We'll use this index to personalize your workouts and plan so you can stay consistent and feel your best."
     }
