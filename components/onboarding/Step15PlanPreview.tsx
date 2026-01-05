@@ -47,6 +47,16 @@ const calculatePricePerWeek = (amount: number, interval: string, intervalCount: 
   return `${formatPrice(pricePerWeek)}/week`
 }
 
+// Static original prices for each plan
+const getOriginalPrice = (planName: string): string => {
+  const originalPrices: Record<string, string> = {
+    'Weekly Plan': '($6.99)',
+    '4-Week Plan': '($19.99)',
+    'Yearly Plan': '($199.99)',
+  }
+  return originalPrices[planName] || ''
+}
+
 // Helper function to map plan from API to display format
 const mapPlanToDisplay = (plan: SubscriptionPlan, index: number) => {
   const badges = ['MOST POPULAR', 'BEST VALUE']
@@ -54,6 +64,7 @@ const mapPlanToDisplay = (plan: SubscriptionPlan, index: number) => {
     id: plan.id, // Use price ID from API
     title: plan.product.name,
     price: formatPrice(plan.amount, plan.currency),
+    originalPrice: getOriginalPrice(plan.product.name),
     pricePerWeek: calculatePricePerWeek(plan.amount, plan.interval, plan.intervalCount),
     badge: index === 1 ? badges[0] : index === 2 ? badges[1] : null, // Second plan is most popular, third is best value
     originalPlan: plan, // Keep original for reference
@@ -66,6 +77,7 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
     id: string
     title: string
     price: string
+    originalPrice: string
     pricePerWeek: string | null
     badge: string | null
     originalPlan: SubscriptionPlan
@@ -450,8 +462,8 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                               width: '24px', 
                               height: '24px',
                               borderRadius: '50%',
-                              border: '2px solid #000000',
-                              backgroundColor: '#000000',
+                              border: '2px solid #5630B0',
+                              backgroundColor: '#5630B0',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -507,19 +519,32 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                       </span>
                     </div>
                     
-                    {/* Divider */}
-                    <div className="border-t mb-4" style={{ borderColor: '#D7DCDF' }}></div>
-                    
-                    {/* Price - pushed to bottom */}
-                    <div className="flex items-baseline gap-2 mt-auto">
-                      <div className="text-2xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                        {plan.price}
-                      </div>
-                      {plan.pricePerWeek && (
-                        <div className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                          {plan.pricePerWeek}
+                    {/* Price section with 50% off badge */}
+                    <div className="flex items-center justify-between gap-4 mt-auto">
+                      <div className="flex flex-col gap-1">
+                        <div className="text-3xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.price}
                         </div>
-                      )}
+                        <div className="text-xl font-bold text-black-500 line-through" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.originalPrice}
+                        </div>
+                      </div>
+                      {/* 50% off badge - positioned to the right, vertically centered */}
+                      <div className="flex-shrink-0">
+                        <div
+                          className="border border-[#5630B0] rounded-full px-3 py-1"
+                          style={{ borderWidth: '2px' }} // Thicker oval border
+                        >
+                          <span
+                            className="text-sm font-extrabold text-[#5630B0]"
+                            style={{
+                              fontFamily: 'var(--font-plus-jakarta-sans)',
+                            }}
+                          >
+                            50% off
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -1104,8 +1129,8 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                               width: '24px', 
                               height: '24px',
                               borderRadius: '50%',
-                              border: '2px solid #000000',
-                              backgroundColor: '#000000',
+                              border: '2px solid #5630B0',
+                              backgroundColor: '#5630B0',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -1161,19 +1186,32 @@ export default function Step15PlanPreview({ onNext, onBack }: Step15PlanPreviewP
                       </span>
                     </div>
                     
-                    {/* Divider */}
-                    <div className="border-t mb-4" style={{ borderColor: '#D7DCDF' }}></div>
-                    
-                    {/* Price - pushed to bottom */}
-                    <div className="flex items-baseline gap-2 mt-auto">
-                      <div className="text-2xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                        {plan.price}
-                      </div>
-                      {plan.pricePerWeek && (
-                        <div className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
-                          {plan.pricePerWeek}
+                    {/* Price section with 50% off badge */}
+                    <div className="flex items-center justify-between gap-4 mt-auto">
+                      <div className="flex flex-col gap-1">
+                        <div className="text-3xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.price}
                         </div>
-                      )}
+                        <div className="text-xl font-bold text-black-500 line-through" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                          {plan.originalPrice}
+                        </div>
+                      </div>
+                      {/* 50% off badge - positioned to the right, vertically centered */}
+                      <div className="flex-shrink-0">
+                        <div
+                          className="border border-[#5630B0] rounded-full px-3 py-1"
+                          style={{ borderWidth: '2px' }} // Thicker oval border
+                        >
+                          <span
+                            className="text-sm font-extrabold text-[#5630B0]"
+                            style={{
+                              fontFamily: 'var(--font-plus-jakarta-sans)',
+                            }}
+                          >
+                            50% off
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
