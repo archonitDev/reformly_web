@@ -3,8 +3,8 @@ name: Deploy to Production
 on:
   push:
     branches:
-      - main  # Change to your main branch name (main/master)
-  workflow_dispatch:  # Allow manual trigger
+      - main  
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -38,9 +38,9 @@ jobs:
             fi
             git remote set-url origin "$REPO_URL" || git remote add origin "$REPO_URL"
             
-            # Configure git to use HTTPS
-            git config --global url."https://github.com/".insteadOf "git@github.com:" || true
-            git config --global url."https://".insteadOf "git://" || true
+            # Configure git to use HTTPS (local config only, not global)
+            git config url."https://github.com/".insteadOf "git@github.com:" || true
+            git config url."https://".insteadOf "git://" || true
             
             echo "=== Pulling latest changes ==="
             git fetch origin
