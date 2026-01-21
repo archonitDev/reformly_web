@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Step3SexProps {
   onNext: () => void
@@ -20,6 +20,15 @@ const options = [
 export default function Step3Sex({ onNext }: Step3SexProps) {
   const sex = useOnboardingStore(s => s.aboutYou.sex)
   const setAboutYou = useOnboardingStore(s => s.setAboutYou)
+  const hasActiveSubscription = useOnboardingStore(s => s.subscription.hasActiveSubscription)
+  const [showActiveSubscriptionModal, setShowActiveSubscriptionModal] = useState(false)
+  
+  // Show modal on mount if user has active subscription
+  useEffect(() => {
+    if (hasActiveSubscription) {
+      setShowActiveSubscriptionModal(true)
+    }
+  }, [hasActiveSubscription])
   
   // Debug: track sex changes
   useEffect(() => {
@@ -164,6 +173,48 @@ export default function Step3Sex({ onNext }: Step3SexProps) {
           </div>
         </div>
       </div>
+
+      {/* Active subscription modal (non-blocking, closes via X; disappears on next step) */}
+      <AnimatePresence>
+        {showActiveSubscriptionModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setShowActiveSubscriptionModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              // Move modal higher (above the "What is your sex?" heading)
+              animate={{ opacity: 1, scale: 1, y: -120 }}
+              exit={{ opacity: 0, scale: 0.98, y: 8 }}
+              transition={{ duration: 0.18 }}
+              className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* 50% bigger: wider + more padding */}
+              <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative p-9">
+                <button
+                  onClick={() => setShowActiveSubscriptionModal(false)}
+                  className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  aria-label="Close"
+                  type="button"
+                >
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontFamily: 'var(--font-plus-jakarta-sans)' }}>
+                  You already have an active subscription
+                </h3>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

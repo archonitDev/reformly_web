@@ -26,6 +26,14 @@ export interface AuthMeResponse {
   bio?: string
   name?: string
   role: string
+  // Optional fields (may exist depending on backend version)
+  onboardingFinished?: boolean
+  isSubscribed?: boolean
+  subscription?: {
+    isSubscribed?: boolean
+    active?: boolean
+    status?: string
+  }
 }
 
 export const sendEmailOtp = async (email: string): Promise<ApiResponse> => {
@@ -82,6 +90,40 @@ export const getAuthMe = async (): Promise<ApiResponse<AuthMeResponse>> => {
     return { ok: true, data }
   } catch (error) {
     const message = error instanceof ApiClientError ? error.message : 'Failed to get user data'
+    return { ok: false, error: message }
+  }
+}
+
+export interface ActiveSubscription {
+  id: string
+  userId: string
+  provider: string
+  providerCustomerId: string | null
+  providerSubscriptionId: string | null
+  productId: string | null
+  plan: string
+  status: string
+  currentPeriodStart: string
+  currentPeriodEnd: string
+  autoRenew: boolean
+  latestReceiptToken: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+// Returns a single subscription object when subscription exists.
+// If response body is empty, it means user has no subscription.
+export const getActiveSubscriptions = async (): Promise<ApiResponse<ActiveSubscription | null>> => {
+  try {
+    const data = await apiClient<any>('/subscriptions/active-subscriptions', {
+      method: 'GET',
+    })
+    if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
+      return { ok: true, data: null }
+    }
+    return { ok: true, data: data as ActiveSubscription }
+  } catch (error) {
+    const message = error instanceof ApiClientError ? error.message : 'Failed to get active subscriptions'
     return { ok: false, error: message }
   }
 }

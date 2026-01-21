@@ -56,6 +56,7 @@ export interface OnboardingState {
     selectedPlanId: string | null
     selectedPlanLabel: string | null
     isSubscribed: boolean
+    hasActiveSubscription: boolean
   }
   
   // Profile
@@ -121,6 +122,7 @@ const initialState = {
     selectedPlanId: null,
     selectedPlanLabel: null,
     isSubscribed: false,
+    hasActiveSubscription: false,
   },
   profile: {
     username: '',

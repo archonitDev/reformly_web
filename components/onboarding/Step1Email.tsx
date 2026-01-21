@@ -42,15 +42,16 @@ export default function Step1Email({ onNext }: Step1EmailProps) {
       }
       
       // Save email to store
-      setAuth({ email, provider: 'email' })
+      // Important: reset verification state so user can't skip OTP step
+      // (store is persisted and may contain isVerified=true from a previous session)
+      setAuth({ email, provider: 'email', isVerified: false })
       
-      // Send OTP request
-      const result = await sendEmailOtp(email)
-      
-      if (result.ok) {
+      // Always send OTP, regardless of whether user was onboarded before
+      const otpResult = await sendEmailOtp(email)
+      if (otpResult.ok) {
         onNext()
       } else {
-        setError(result.error || 'Failed to send verification code')
+        setError(otpResult.error || 'Failed to send verification code')
       }
     } catch (error: any) {
       console.error('Failed to send OTP:', error)
@@ -67,7 +68,7 @@ export default function Step1Email({ onNext }: Step1EmailProps) {
       setIsLoading(false)
     }
   }
-  
+
   const isEmailValid = validateEmail(email)
   
   return (

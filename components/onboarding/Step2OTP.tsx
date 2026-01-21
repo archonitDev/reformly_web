@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Button from '../Button'
 import { useOnboardingStore } from '@/lib/store'
-import { verifyEmailOtp, getAuthMe, sendEmailOtp } from '@/lib/api'
+import { verifyEmailOtp, getAuthMe, sendEmailOtp, getActiveSubscriptions } from '@/lib/api'
 import { ensureFirebaseUser } from '@/lib/firebase'
 
 interface Step2OTPProps {
@@ -17,7 +17,7 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
   const [resendTimer, setResendTimer] = useState(90) // 90 seconds = 1:30
   const [error, setError] = useState<string | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const { auth, setAuth, setProfile } = useOnboardingStore()
+  const { auth, setAuth, setProfile, setSubscription } = useOnboardingStore()
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -90,6 +90,19 @@ export default function Step2OTP({ onNext }: Step2OTPProps) {
         } catch (meError) {
           // Non-critical error, log but continue
           console.warn('[Step2OTP] Failed to fetch user data, continuing:', meError)
+        }
+        
+        // Check for active subscription after OTP verification
+        try {
+          const subscriptionsResult = await getActiveSubscriptions()
+          if (subscriptionsResult.ok) {
+            const hasActiveSubscription = subscriptionsResult.data?.status === 'active'
+            console.log('[Step2OTP] Active subscription check:', { hasActiveSubscription })
+            setSubscription({ hasActiveSubscription })
+          }
+        } catch (subError) {
+          // Non-critical error, log but continue
+          console.warn('[Step2OTP] Failed to check active subscriptions, continuing:', subError)
         }
         
         // Proceed to next step - use setTimeout to ensure state update is processed
