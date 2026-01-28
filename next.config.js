@@ -12,6 +12,22 @@ const nextConfig = {
       pagesBufferLength: 2,
     },
   }),
+  // Image optimization configuration
+  images: {
+    // Allow all image formats
+    formats: ['image/avif', 'image/webp'],
+    // Enable image optimization in production
+    minimumCacheTTL: 60,
+    // Allow images from the same origin (for local images in /public)
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // For production, ensure images are served correctly
+    unoptimized: false,
+    // Configure for reverse proxy (Traefik)
+    // This ensures images work correctly when behind a proxy
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
   // Enable webpack polling for hot reload in Docker (especially on Windows)
   webpack: (config, { dev }) => {
     if (dev) {

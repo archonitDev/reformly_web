@@ -43,6 +43,10 @@ services:
       - "traefik.http.routers.reformly-web.entrypoints=websecure"
       - "traefik.http.routers.reformly-web.tls.certresolver=letsencrypt"
       - "traefik.http.services.reformly-web.loadbalancer.server.port=3000"
+      # Ensure proper headers are passed through for Next.js Image Optimization
+      - "traefik.http.middlewares.reformly-web-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.reformly-web-headers.headers.customrequestheaders.X-Forwarded-Host=quiz.reformly.com"
+      - "traefik.http.routers.reformly-web.middlewares=reformly-web-headers"
       # Alternative HTTP entrypoint (uncomment if needed)
       # - "traefik.http.routers.reformly-web-http.rule=Host(`quiz.reformly.com`)"
       # - "traefik.http.routers.reformly-web-http.entrypoints=web"
